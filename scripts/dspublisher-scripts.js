@@ -12,7 +12,7 @@ const LICENSE_CHECK = {
       text: 'Checking license',
       readySignal: 'BUILD SUCCESS',
       doneText: 'License check passed',
-      weight: 5, // TODO: Time the weights (clean environment)
+      weight: 10,
     },
   ],
 };
@@ -46,7 +46,7 @@ const SCRIPTS = {
             text: 'Installing dependencies',
             readySignal: 'BUILD SUCCESS',
             doneText: 'Dependencies installed',
-            weight: 15,
+            weight: 25,
           },
         ],
       },
@@ -58,17 +58,17 @@ const SCRIPTS = {
             text: 'Initializing startup',
             readySignal: 'success building schema',
             doneText: 'Creating pages',
-            weight: 10,
+            weight: 30,
           },
           {
             readySignal: 'success createPages',
             doneText: 'Building development bundle',
-            weight: 10,
+            weight: 15,
           },
           {
             readySignal: 'You can now view',
             doneText: 'Ready. Open http://localhost:8000 in the browser.',
-            weight: 10,
+            weight: 95,
             lastPhase: true,
           },
         ],
@@ -86,7 +86,7 @@ const SCRIPTS = {
             text: 'Installing dependencies',
             readySignal: 'BUILD SUCCESS',
             doneText: 'Dependencies installed',
-            weight: 15,
+            weight: 25,
           },
         ],
       },
@@ -95,7 +95,7 @@ const SCRIPTS = {
         phases: [
           {
             text: 'Removing old build',
-            weight: 2,
+            weight: 1,
           },
         ],
       },
@@ -104,7 +104,7 @@ const SCRIPTS = {
         phases: [
           {
             text: 'Building a deployable jar',
-            weight: 5,
+            weight: 40,
           },
         ],
       },
@@ -115,17 +115,17 @@ const SCRIPTS = {
             text: 'Building static pages',
             readySignal: 'success createPages',
             doneText: 'Building production JavaScript and CSS bundles',
-            weight: 10,
+            weight: 35,
           },
           {
             readySignal: 'success Building production JavaScript and CSS bundles',
             doneText: 'Generating image thumbnails',
-            weight: 10,
+            weight: 180,
           },
           {
             readySignal: 'Done building',
             doneText: 'Done building static pages',
-            weight: 10,
+            weight: 60,
           },
         ],
       },
@@ -134,6 +134,7 @@ const SCRIPTS = {
         phases: [
           {
             text: 'Copying jar to output',
+            doneText: 'Ready. The build artifacts are in dspublisher/out',
             weight: 5,
             lastPhase: true,
           },
@@ -170,7 +171,6 @@ const progressState = {
  */
 function renderProgress(state) {
   process.stdout.clearLine(0);
-  process.stdout.cursorTo(0);
 
   const progressBarWidth = 30;
   const progressBar = `[${'='.repeat(
@@ -180,6 +180,8 @@ function renderProgress(state) {
   )}]`;
 
   process.stdout.write(`${state.name} ${progressBar} ${state.phase}${state.spinner}`);
+
+  process.stdout.cursorTo(0);
 }
 
 // Interval for rendering the "spinner"
@@ -187,6 +189,22 @@ const spinnerInterval = setInterval(() => {
   progressState.spinner = progressState.spinner.length === 3 ? '' : progressState.spinner + '.';
   renderProgress(progressState);
 }, 500);
+
+function finish() {
+  // Stop the spinner
+  clearInterval(spinnerInterval);
+  progressState.spinner = '';
+
+  // Make sure the progress bar shows 100%
+  progressState.progress = totalWeight;
+
+  // Render doneText of the last phase of the last command
+  const lastCommand = activeScript.commands[activeScript.commands.length - 1];
+  const lastPhase = lastCommand.phases[lastCommand.phases.length - 1];
+  progressState.phase = lastPhase.doneText;
+
+  renderProgress(progressState);
+}
 
 // Run each command sequentially
 const runCommand = (commands, index) => {
@@ -206,38 +224,33 @@ const runCommand = (commands, index) => {
       // The current command was finished, run the next one
       runCommand(commands, index + 1);
     } else {
-      clearInterval(spinnerInterval);
-      progressState.spinner = '';
-      progressState.progress = totalWeight;
-      renderProgress(progressState);
+      // All commands were run, finish
+      finish();
     }
   });
 
   // TODO: --verbose option
   process.stdout.on('data', (data) => {
-    // Find if the output includes the ready signal
-    // for one of the phases.
+    // Find if the output includes the ready signal for one of the phases.
     const phase = command.phases.find((p) => data.includes(p.readySignal));
 
     if (phase && !phase.done) {
       // A phase was found and it wasn't marked as done yet
 
-      if (phase.doneText) {
-        // If the phase has a done text, have it printed
-        progressState.phase = phase.doneText;
-      }
-
       if (phase.lastPhase) {
-        // This was the last phase. Stop the spinner.
-        clearInterval(spinnerInterval);
-        progressState.spinner = '';
-        progressState.progress = totalWeight;
+        // This is the last phase of the script
+        finish();
       } else {
+        if (phase.doneText) {
+          // If the phase has a done text, have it printed
+          progressState.phase = phase.doneText;
+        }
+
         // Update the progress
         progressState.progress += phase.weight;
-      }
 
-      renderProgress(progressState);
+        renderProgress(progressState);
+      }
 
       phase.done = true;
     }

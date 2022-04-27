@@ -178,6 +178,7 @@ const progressState = {
  */
 function renderProgress(state) {
   process.stdout.clearLine(0);
+  process.stdout.cursorTo(0);
 
   const progressBarWidth = 30;
   const progressBar = `[${'='.repeat(
@@ -187,8 +188,6 @@ function renderProgress(state) {
   )}]`;
 
   process.stdout.write(`${state.name} ${progressBar} ${state.phase}${state.spinner}`);
-
-  process.stdout.cursorTo(0);
 }
 
 // Interval for rendering the "spinner"

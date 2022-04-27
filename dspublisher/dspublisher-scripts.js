@@ -14,6 +14,13 @@ const LICENSE_CHECK = {
       doneText: 'License check passed',
       weight: 10,
     },
+    // TODO:
+    // {
+    //   text: 'Waiting for the license file to be installed',
+    //   readySignal: 'BUILD SUCCESS',
+    //   doneText: 'License check passed',
+    //   weight: 10,
+    // },
   ],
 };
 

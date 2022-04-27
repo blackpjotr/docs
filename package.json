@@ -148,7 +148,6 @@
     "lit-css-loader": "0.1.0",
     "loader-utils": "2.0.0",
     "prettier": "^2.2.1",
-    "rimraf": "^3.0.2",
     "typescript": "4.5.3",
     "webpack": "4.46.0",
     "webpack-cli": "4.9.2",
@@ -319,7 +318,7 @@
       "workbox-precaching": "6.5.0",
       "workbox-webpack-plugin": "6.5.0"
     },
-    "hash": "1dfd8506e0aa2cac2131f54e85151e7ee10774bc6ae14d1a494b9056cc3981c9"
+    "hash": "e60fbcbc10f849ab41224a3488ffe6074d266981e2f88bce81b8aa7c8f8b9da1"
   },
   "overrides": {
     "@vaadin/accordion": "$@vaadin/accordion",

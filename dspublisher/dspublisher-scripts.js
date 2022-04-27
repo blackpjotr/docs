@@ -8,7 +8,7 @@ const DSP_VERSION = '2.0.0-alpha.6';
 
 // License check helper command
 const LICENSE_CHECK = {
-  command: 'mvn -C -P dspublisher-license-check',
+  shell: 'mvn -C -P dspublisher-license-check',
   phases: [
     {
       text: 'Checking license',
@@ -27,7 +27,7 @@ const dependenciesInstalled = concurrentlyInstalled;
 const DEPENDENCIES = !dependenciesInstalled
   ? [
       {
-        command: 'mvn vaadin:prepare-frontend vaadin:build-frontend',
+        shell: 'mvn vaadin:prepare-frontend vaadin:build-frontend',
         phases: [
           {
             text: 'Installing dependencies',
@@ -45,7 +45,7 @@ const SCRIPTS = {
     name: 'DSP Clean',
     commands: [
       {
-        command: `npx @vaadin/dspublisher@${DSP_VERSION} --clean && mvn -C clean`,
+        shell: `npx @vaadin/dspublisher@${DSP_VERSION} --clean && mvn -C clean`,
         phases: [
           {
             text: 'Cleaning up caches',
@@ -64,20 +64,20 @@ const SCRIPTS = {
       ...DEPENDENCIES,
       // Starts docs-app and docs server (concurrently)
       {
-        command: `npx concurrently --kill-others --raw "npx @vaadin/dspublisher@${DSP_VERSION} --develop" "mvn -C"`,
+        shell: `npx concurrently --kill-others --raw "npx @vaadin/dspublisher@${DSP_VERSION} --develop" "mvn -C"`,
         phases: [
           {
-            text: 'Initializing startup',
+            text: 'Initializing',
             readySignal: 'success building schema',
-            doneText: 'Creating pages',
             weight: 30,
           },
           {
+            text: 'Creating pages',
             readySignal: 'success createPages',
-            doneText: 'Building development bundle',
             weight: 15,
           },
           {
+            text: 'Building development bundle',
             readySignal: 'You can now view',
             doneText: 'Ready. Open http://localhost:8000 in the browser.',
             weight: 95,
@@ -93,7 +93,9 @@ const SCRIPTS = {
       LICENSE_CHECK,
       ...DEPENDENCIES,
       {
-        command: 'npx rimraf dspublisher/out',
+        func: () => {
+          fs.rm(path.resolve(__dirname, 'out'), { recursive: true }, () => {});
+        },
         phases: [
           {
             text: 'Removing old build',
@@ -102,37 +104,50 @@ const SCRIPTS = {
         ],
       },
       {
-        command: 'mvn -C clean package -DskipTests -Pproduction',
+        shell: 'mvn -C clean package -DskipTests -Pproduction',
         phases: [
           {
             text: 'Building a deployable jar',
+            readySignal: 'BUILD SUCCESS',
             weight: 40,
           },
         ],
       },
       {
-        command: `npx @vaadin/dspublisher@${DSP_VERSION} --build`,
+        shell: `npx @vaadin/dspublisher@${DSP_VERSION} --build`,
         phases: [
           {
             text: 'Building static pages',
             readySignal: 'success createPages',
-            doneText: 'Building production JavaScript and CSS bundles',
             weight: 35,
           },
           {
+            text: 'Building production JavaScript and CSS bundles',
             readySignal: 'success Building production JavaScript and CSS bundles',
-            doneText: 'Generating image thumbnails',
             weight: 180,
           },
           {
+            text: 'Generating image thumbnails',
             readySignal: 'Done building',
-            doneText: 'Done building static pages',
             weight: 60,
           },
         ],
       },
       {
-        command: `cp -r target/*.jar dspublisher/out/docs.jar`,
+        func: () => {
+          // Copy the jar file from ../target/*.jar to ../dspublisher/out/docs.jar
+          const jarFile = fs
+            .readdirSync(path.resolve(__dirname, '..', 'target'))
+            .find((fn) => fn.endsWith('.jar'));
+
+          fs.copyFile(
+            path.resolve(__dirname, '..', 'target', jarFile),
+            path.resolve(__dirname, 'out', 'docs.jar'),
+            (err) => {
+              if (err) throw err;
+            }
+          );
+        },
         phases: [
           {
             text: 'Copying jar to output',
@@ -215,11 +230,53 @@ const runCommand = (commands, index) => {
   progressState.phase = command.phases[0].text;
   renderProgress(progressState);
 
-  const process = exec(command.command, (error) => {
-    if (error) {
-      console.error(`exec error: ${error}`);
-      return;
-    }
+  if (command.shell) {
+    const process = exec(command.shell, (error) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return;
+      }
+
+      if (index < commands.length - 1) {
+        // The current command was finished, run the next one
+        runCommand(commands, index + 1);
+      } else {
+        // All commands were run, finish
+        finish();
+      }
+    });
+
+    // TODO: --verbose option
+    process.stdout.on('data', (data) => {
+      const phases = command.phases;
+
+      // Find if the output includes the ready signal for one of the phases.
+      const phase = phases.find((p) => data.includes(p.readySignal));
+
+      if (phase && !phase.done) {
+        // A phase was found and it wasn't marked as done yet
+
+        if (phase.lastPhase) {
+          // This is the last phase of the script
+          finish();
+        } else {
+          // Update the progress
+          progressState.progress += phase.weight;
+
+          const nextPhase = phases[phases.indexOf(phase) + 1];
+          if (nextPhase) {
+            // If the next phase exists, render its text
+            progressState.phase = nextPhase.text;
+          }
+
+          renderProgress(progressState);
+        }
+
+        phase.done = true;
+      }
+    });
+  } else if (command.func) {
+    command.func();
 
     if (index < commands.length - 1) {
       // The current command was finished, run the next one
@@ -228,34 +285,7 @@ const runCommand = (commands, index) => {
       // All commands were run, finish
       finish();
     }
-  });
-
-  // TODO: --verbose option
-  process.stdout.on('data', (data) => {
-    // Find if the output includes the ready signal for one of the phases.
-    const phase = command.phases.find((p) => data.includes(p.readySignal));
-
-    if (phase && !phase.done) {
-      // A phase was found and it wasn't marked as done yet
-
-      if (phase.lastPhase) {
-        // This is the last phase of the script
-        finish();
-      } else {
-        if (phase.doneText) {
-          // If the phase has a done text, have it printed
-          progressState.phase = phase.doneText;
-        }
-
-        // Update the progress
-        progressState.progress += phase.weight;
-
-        renderProgress(progressState);
-      }
-
-      phase.done = true;
-    }
-  });
+  }
 };
 
 // Before running the commands, make sure DSP is installed

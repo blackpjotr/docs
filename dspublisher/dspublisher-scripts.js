@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-undef */
 const { exec, execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
 
 const DSP_VERSION = '2.0.0-alpha.6';
 
@@ -14,38 +16,16 @@ const LICENSE_CHECK = {
       doneText: 'License check passed',
       weight: 10,
     },
-    // TODO:
-    // {
-    //   text: 'Waiting for the license file to be installed',
-    //   readySignal: 'BUILD SUCCESS',
-    //   doneText: 'License check passed',
-    //   weight: 10,
-    // },
   ],
 };
 
-const SCRIPTS = {
-  clean: {
-    name: 'DSP Clean',
-    commands: [
-      {
-        command: `npx @vaadin/dspublisher@${DSP_VERSION} --clean && mvn -C clean`,
-        phases: [
-          {
-            text: 'Cleaning up caches',
-            readySignal: 'BUILD SUCCESS',
-            doneText: 'Caches cleaned up',
-            weight: 5,
-          },
-        ],
-      },
-    ],
-  },
-  develop: {
-    name: 'DSP Start',
-    commands: [
-      LICENSE_CHECK,
-      // Pre-builds the Vaadin frontend and makes sure concurrently (needed in the next phase) is installed
+// Makes sure the necessary npm dependencies are installed
+const concurrentlyInstalled = fs.existsSync(
+  path.resolve(__dirname, '..', 'node_modules', 'concurrently')
+);
+const dependenciesInstalled = concurrentlyInstalled;
+const DEPENDENCIES = !dependenciesInstalled
+  ? [
       {
         command: 'mvn vaadin:prepare-frontend vaadin:build-frontend',
         phases: [
@@ -57,6 +37,31 @@ const SCRIPTS = {
           },
         ],
       },
+    ]
+  : [];
+
+const SCRIPTS = {
+  clean: {
+    name: 'DSP Clean',
+    commands: [
+      {
+        command: `npx @vaadin/dspublisher@${DSP_VERSION} --clean && mvn -C clean`,
+        phases: [
+          {
+            text: 'Cleaning up caches',
+            readySignal: 'BUILD SUCCESS',
+            doneText: 'Ready. Caches cleaned up',
+            weight: 5,
+          },
+        ],
+      },
+    ],
+  },
+  develop: {
+    name: 'DSP Start',
+    commands: [
+      LICENSE_CHECK,
+      ...DEPENDENCIES,
       // Starts docs-app and docs server (concurrently)
       {
         command: `npx concurrently --kill-others --raw "npx @vaadin/dspublisher@${DSP_VERSION} --develop" "mvn -C"`,
@@ -86,17 +91,7 @@ const SCRIPTS = {
     name: 'DSP Build',
     commands: [
       LICENSE_CHECK,
-      {
-        command: 'mvn vaadin:prepare-frontend vaadin:build-frontend',
-        phases: [
-          {
-            text: 'Installing dependencies',
-            readySignal: 'BUILD SUCCESS',
-            doneText: 'Dependencies installed',
-            weight: 25,
-          },
-        ],
-      },
+      ...DEPENDENCIES,
       {
         command: 'npx rimraf dspublisher/out',
         phases: [

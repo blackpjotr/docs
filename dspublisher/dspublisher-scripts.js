@@ -6,6 +6,8 @@ const path = require('path');
 
 const DSP_VERSION = '2.0.0-alpha.6';
 
+// TODO: --verbose option
+
 // License check helper command
 const LICENSE_CHECK = {
   shell: 'mvn -C -P dspublisher-license-check',
@@ -94,7 +96,7 @@ const SCRIPTS = {
       ...DEPENDENCIES,
       {
         func: () => {
-          fs.rm(path.resolve(__dirname, 'out'), { recursive: true }, () => {});
+          fs.rmSync(path.resolve(__dirname, 'out'), { recursive: true });
         },
         phases: [
           {
@@ -140,12 +142,9 @@ const SCRIPTS = {
             .readdirSync(path.resolve(__dirname, '..', 'target'))
             .find((fn) => fn.endsWith('.jar'));
 
-          fs.copyFile(
+          fs.copyFileSync(
             path.resolve(__dirname, '..', 'target', jarFile),
-            path.resolve(__dirname, 'out', 'docs.jar'),
-            (err) => {
-              if (err) throw err;
-            }
+            path.resolve(__dirname, 'out', 'docs.jar')
           );
         },
         phases: [
@@ -184,7 +183,6 @@ const progressState = {
 
 /**
  * Renders the progress bar.
- * Can't use a library for this because initially no dependencies are installed.
  */
 function renderProgress(state) {
   process.stdout.clearLine(0);
@@ -222,34 +220,21 @@ function finish() {
   renderProgress(progressState);
 }
 
-// Run each command sequentially
-const runCommand = (commands, index) => {
-  const command = commands[index];
-
-  // Render the text from the first phase of the current command
-  progressState.phase = command.phases[0].text;
-  renderProgress(progressState);
-
-  if (command.shell) {
-    const process = exec(command.shell, (error) => {
+/**
+ * Executes a shell command.
+ * Observes the output of the child process and updates the progress bar
+ * as defined by the phases of the command.
+ */
+async function execute(shellCommand, phases) {
+  return new Promise((resolve) => {
+    exec(shellCommand, (error) => {
       if (error) {
-        console.error(`exec error: ${error}`);
-        return;
+        console.error(error);
+        process.exit(1);
       }
 
-      if (index < commands.length - 1) {
-        // The current command was finished, run the next one
-        runCommand(commands, index + 1);
-      } else {
-        // All commands were run, finish
-        finish();
-      }
-    });
-
-    // TODO: --verbose option
-    process.stdout.on('data', (data) => {
-      const phases = command.phases;
-
+      resolve();
+    }).stdout.on('data', (data) => {
       // Find if the output includes the ready signal for one of the phases.
       const phase = phases.find((p) => data.includes(p.readySignal));
 
@@ -275,20 +260,26 @@ const runCommand = (commands, index) => {
         phase.done = true;
       }
     });
-  } else if (command.func) {
-    command.func();
-
-    if (index < commands.length - 1) {
-      // The current command was finished, run the next one
-      runCommand(commands, index + 1);
-    } else {
-      // All commands were run, finish
-      finish();
-    }
-  }
-};
+  });
+}
 
 // Before running the commands, make sure DSP is installed
 execSync(`npx @vaadin/dspublisher@${DSP_VERSION}`, { stdio: 'inherit' });
 
-runCommand(activeScript.commands, 0);
+(async () => {
+  // Run each command in the active script sequentially
+  for (let command of activeScript.commands) {
+    // Render the text from the first phase of the current command
+    progressState.phase = command.phases[0].text;
+    renderProgress(progressState);
+
+    // Run either a shell command or a function associated with the command
+    if (command.shell) {
+      await execute(command.shell, command.phases);
+    } else if (command.func) {
+      await command.func();
+    }
+  }
+
+  finish();
+})();

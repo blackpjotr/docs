@@ -96,7 +96,10 @@ const SCRIPTS = {
       ...DEPENDENCIES,
       {
         func: () => {
-          fs.rmSync(path.resolve(__dirname, 'out'), { recursive: true });
+          const outFolder = path.resolve(__dirname, 'out');
+          if (fs.existsSync(outFolder)) {
+            fs.rmSync(outFolder, { recursive: true });
+          }
         },
         phases: [
           {

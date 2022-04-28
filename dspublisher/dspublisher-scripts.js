@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-undef */
-const { exec, execSync } = require('child_process');
+const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
 const DSP_VERSION = '2.0.0-alpha.6';
-
-// TODO: --verbose option
 
 // License check helper command
 const LICENSE_CHECK = {
@@ -47,10 +45,20 @@ const SCRIPTS = {
     name: 'DSP Clean',
     commands: [
       {
-        shell: `npx @vaadin/dspublisher@${DSP_VERSION} --clean && mvn -C clean`,
+        shell: `npx @vaadin/dspublisher@${DSP_VERSION} --clean`,
         phases: [
           {
-            text: 'Cleaning up caches',
+            text: 'Cleaning up dspublisher cache',
+            readySignal: 'Successfully deleted directories',
+            weight: 5,
+          },
+        ],
+      },
+      {
+        shell: 'mvn -C clean',
+        phases: [
+          {
+            text: 'Cleaning up project',
             readySignal: 'BUILD SUCCESS',
             doneText: 'Ready. Caches cleaned up',
             weight: 5,
@@ -66,7 +74,14 @@ const SCRIPTS = {
       ...DEPENDENCIES,
       // Starts docs-app and docs server (concurrently)
       {
-        shell: `npx concurrently --kill-others --raw "npx @vaadin/dspublisher@${DSP_VERSION} --develop" "mvn -C"`,
+        shell: [
+          'npx',
+          'concurrently',
+          '--kill-others',
+          '--raw',
+          `"npx @vaadin/dspublisher@${DSP_VERSION} --develop"`,
+          '"mvn -C"',
+        ],
         phases: [
           {
             text: 'Initializing',
@@ -230,14 +245,24 @@ function finish() {
  */
 async function execute(shellCommand, phases) {
   return new Promise((resolve) => {
-    exec(shellCommand, (error) => {
-      if (error) {
-        console.error(error);
-        process.exit(1);
+    const parts = Array.isArray(shellCommand) ? shellCommand : shellCommand.split(' ');
+    const ps = spawn(parts[0], [...parts.slice(1)]);
+
+    ps.on('close', (code) => {
+      if (code !== 0) {
+        console.error(`${shellCommand} failed with code ${code}`);
+        process.exit(code);
       }
 
       resolve();
-    }).stdout.on('data', (data) => {
+    });
+
+    ps.stdout.on('data', (data) => {
+      process.stdout.clearLine(0);
+      process.stdout.cursorTo(0);
+      process.stdout.write(data.toString());
+      renderProgress(progressState);
+
       // Find if the output includes the ready signal for one of the phases.
       const phase = phases.find((p) => data.includes(p.readySignal));
 
@@ -265,9 +290,6 @@ async function execute(shellCommand, phases) {
     });
   });
 }
-
-// Before running the commands, make sure DSP is installed
-execSync(`npx @vaadin/dspublisher@${DSP_VERSION}`, { stdio: 'inherit' });
 
 (async () => {
   // Run each command in the active script sequentially

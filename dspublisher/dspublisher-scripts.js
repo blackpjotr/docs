@@ -79,6 +79,7 @@ const SCRIPTS = {
             lastPhase: true,
           },
         ],
+        ignoredLogSignals: ['ERR_REQUIRE_ESM'],
       },
     ],
   },
@@ -129,6 +130,7 @@ const SCRIPTS = {
             weight: 60,
           },
         ],
+        ignoredLogSignals: ['ERR_REQUIRE_ESM'],
       },
       {
         func: () => {
@@ -220,7 +222,7 @@ function finish() {
  * Observes the output of the child process and updates the progress bar
  * as defined by the phases of the command.
  */
-async function execute(shellCommand, phases) {
+async function execute(shellCommand, phases, ignoredLogSignals = []) {
   return new Promise((resolve) => {
     const parts = Array.isArray(shellCommand) ? shellCommand : shellCommand.split(' ');
     const ps = spawn(parts[0], [...parts.slice(1)], { shell: true });
@@ -237,7 +239,11 @@ async function execute(shellCommand, phases) {
     ps.stdout.on('data', (data) => {
       process.stdout.clearLine(0);
       process.stdout.cursorTo(0);
-      process.stdout.write(data.toString());
+
+      if (ignoredLogSignals.every((signal) => !data.toString().includes(signal))) {
+        process.stdout.write(data.toString());
+      }
+
       renderProgress(progressState);
 
       // Find if the output includes the ready signal for one of the phases.
@@ -277,7 +283,7 @@ async function execute(shellCommand, phases) {
 
     // Run either a shell command or a function associated with the command
     if (command.shell) {
-      await execute(command.shell, command.phases);
+      await execute(command.shell, command.phases, command.ignoredLogSignals);
     } else if (command.func) {
       await command.func();
     }

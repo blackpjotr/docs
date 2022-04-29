@@ -125,7 +125,6 @@
     "@typescript-eslint/parser": "^4.9.1",
     "chokidar": "^3.5.0",
     "compression-webpack-plugin": "4.0.1",
-    "concurrently": "^7.1.0",
     "css-loader": "5.2.7",
     "esbuild-loader": "2.15.1",
     "eslint": "^7.15.0",
@@ -316,7 +315,7 @@
       "workbox-precaching": "6.5.0",
       "workbox-webpack-plugin": "6.5.0"
     },
-    "hash": "2211c4a250a28ea03837409ba4dfb05d601243f1f2620c1c34f5cb6a056abeb9"
+    "hash": "444e1bfc31ebba5b16934885c61646c09e6e15de1ed03d2df5e0b58f48fe7c48"
   },
   "overrides": {
     "@vaadin/accordion": "$@vaadin/accordion",

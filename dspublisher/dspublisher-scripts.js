@@ -19,27 +19,6 @@ const LICENSE_CHECK = {
   ],
 };
 
-// Makes sure the necessary npm dependencies are installed
-const concurrentlyInstalled = fs.existsSync(
-  path.resolve(__dirname, '..', 'node_modules', 'concurrently')
-);
-const dependenciesInstalled = concurrentlyInstalled;
-const DEPENDENCIES = !dependenciesInstalled
-  ? [
-      {
-        shell: 'mvn vaadin:prepare-frontend vaadin:build-frontend',
-        phases: [
-          {
-            text: 'Installing dependencies',
-            readySignal: 'BUILD SUCCESS',
-            doneText: 'Dependencies installed',
-            weight: 25,
-          },
-        ],
-      },
-    ]
-  : [];
-
 const SCRIPTS = {
   clean: {
     name: 'DSP Clean',
@@ -71,7 +50,6 @@ const SCRIPTS = {
     name: 'DSP Start',
     commands: [
       LICENSE_CHECK,
-      ...DEPENDENCIES,
       // Starts docs-app and docs server (concurrently)
       {
         shell: [
@@ -108,7 +86,6 @@ const SCRIPTS = {
     name: 'DSP Build',
     commands: [
       LICENSE_CHECK,
-      ...DEPENDENCIES,
       {
         func: () => {
           const outFolder = path.resolve(__dirname, 'out');

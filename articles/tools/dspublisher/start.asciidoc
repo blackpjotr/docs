@@ -17,6 +17,11 @@ The documentation contains a Vaadin project for rendering UI examples, and you n
 +
 The CLI tool uses https://git-scm.com/[Git] to clone an initial copy of the documentation project, so make sure to have Git installed.
 
+. *Node.js*
++
+Design System Publisher uses https://nodejs.org/[Node.js], so make sure to have it installed.
+Version 16 is recommended.
+
 == Create a New Project
 
 Run the following command to create a new design system website project:

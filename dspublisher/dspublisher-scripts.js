@@ -246,7 +246,7 @@ function finish() {
 async function execute(shellCommand, phases) {
   return new Promise((resolve) => {
     const parts = Array.isArray(shellCommand) ? shellCommand : shellCommand.split(' ');
-    const ps = spawn(parts[0], [...parts.slice(1)]);
+    const ps = spawn(parts[0], [...parts.slice(1)], { shell: true });
 
     ps.on('close', (code) => {
       if (code !== 0) {

@@ -1,66 +1,32 @@
 import 'Frontend/demo/init'; // hidden-source-line
-import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
-import { applyTheme } from 'Frontend/generated/theme';
-import '@vaadin/button';
-import '@vaadin/radio-group';
-import type { RadioGroupValueChangedEvent } from '@vaadin/radio-group';
 import '@vaadin/vertical-layout';
+import { html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
+import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('basic-layouts-vertical-layout-individual-alignment')
 export class Example extends LitElement {
-  constructor() {
-    super();
+  connectedCallback() {
+    super.connectedCallback();
     this.classList.add('basic-layouts-example');
   }
 
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
     return root;
   }
 
-  // tag::snippet[]
-  @state()
-  alignLayoutItems = 'flex-start';
-
-  @state()
-  alignFirstItem = 'auto';
-
-  render() {
+  protected override render() {
     return html`
-      <vaadin-vertical-layout theme="spacing padding" style="align-items: ${this.alignLayoutItems}">
-        <vaadin-button style="align-self: ${this.alignFirstItem}" theme="primary">
-          Button 1
-        </vaadin-button>
-        <vaadin-button>Button 2</vaadin-button>
-        <vaadin-button>Button 3</vaadin-button>
+      <!-- tag::snippet[] -->
+      <vaadin-vertical-layout theme="spacing padding" style="align-items: start">
+        <div class="example-item" style="align-self: end">Item 1</div>
+        <div class="example-item" style="align-self: center">Item 2</div>
+        <div class="example-item">Item 3</div>
       </vaadin-vertical-layout>
-      <vaadin-radio-group
-        label="Layout alignment"
-        .value="${this.alignLayoutItems}"
-        @value-changed="${(e: RadioGroupValueChangedEvent) =>
-          (this.alignLayoutItems = e.detail.value)}"
-      >
-        <vaadin-radio-button value="flex-start" label="Start (default)"></vaadin-radio-button>
-        <vaadin-radio-button value="center" label="Center"></vaadin-radio-button>
-        <vaadin-radio-button value="flex-end" label="End"></vaadin-radio-button>
-        <vaadin-radio-button value="stretch" label="Stretch"></vaadin-radio-button>
-      </vaadin-radio-group>
-      <vaadin-radio-group
-        label="Item 1: alignment"
-        .value="${this.alignFirstItem}"
-        @value-changed="${(e: RadioGroupValueChangedEvent) =>
-          (this.alignFirstItem = e.detail.value)}"
-      >
-        <vaadin-radio-button value="auto" label="Auto (default)"></vaadin-radio-button>
-        <vaadin-radio-button value="flex-start" label="Start"></vaadin-radio-button>
-        <vaadin-radio-button value="center" label="Center"></vaadin-radio-button>
-        <vaadin-radio-button value="flex-end" label="End"></vaadin-radio-button>
-        <vaadin-radio-button value="stretch" label="Stretch"></vaadin-radio-button>
-      </vaadin-radio-group>
+      <!-- end::snippet[] -->
     `;
   }
-  // end::snippet[]
 }

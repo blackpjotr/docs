@@ -1,7 +1,7 @@
 import 'Frontend/demo/init'; // hidden-source-line
+import '@vaadin/crud';
 import { html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import '@vaadin/crud';
 import type { CrudEditedItemChangedEvent } from '@vaadin/crud';
 import type { Grid } from '@vaadin/grid';
 import { getPeople } from 'Frontend/demo/domain/DataService';
@@ -10,7 +10,7 @@ import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('crud-open-editor')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -21,21 +21,23 @@ export class Example extends LitElement {
   private items: Person[] = [];
 
   @state()
-  private editedItem?: Person;
+  private editedItem: Person | undefined;
 
-  async firstUpdated() {
-    this.items = (await getPeople()).people;
+  protected override async firstUpdated() {
+    const { people } = await getPeople();
+    this.items = people;
   }
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <vaadin-crud
         include="firstName, lastName, email, profession"
         .items="${this.items}"
         .editedItem="${this.editedItem as any}"
-        @edited-item-changed="${(e: CrudEditedItemChangedEvent<Person>) =>
-          (this.editedItem = e.detail.value)}"
+        @edited-item-changed="${(event: CrudEditedItemChangedEvent<Person>) => {
+          this.editedItem = event.detail.value;
+        }}"
       >
         <vaadin-grid slot="grid" @dblclick="${this.onDblClick}">
           <vaadin-grid-column path="firstName" header="First name"></vaadin-grid-column>

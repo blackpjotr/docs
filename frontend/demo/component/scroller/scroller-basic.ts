@@ -1,7 +1,4 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
-import { css, html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
 import '@vaadin/button';
 import '@vaadin/date-picker';
 import '@vaadin/icon';
@@ -10,57 +7,57 @@ import '@vaadin/scroller';
 import '@vaadin/text-area';
 import '@vaadin/text-field';
 import '@vaadin/vertical-layout';
+import { css, html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('scroller-basic')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  static override styles = css`
+    #container {
+      align-items: stretch;
+      border: 1px solid var(--lumo-contrast-20pct);
+      max-width: 100%;
+      height: 400px;
+      width: 360px;
+    }
+
+    header {
+      align-items: center;
+      display: flex;
+      border-bottom: 1px solid var(--lumo-contrast-20pct);
+      padding: var(--lumo-space-m);
+    }
+
+    header h2 {
+      margin: 0;
+    }
+
+    header vaadin-icon {
+      box-sizing: border-box;
+      height: var(--lumo-icon-size-m);
+      margin-right: var(--lumo-space-m);
+      padding: calc(var(--lumo-space-xs) / 2);
+      width: var(--lumo-icon-size-m);
+    }
+
+    footer {
+      padding: var(--lumo-space-wide-m);
+    }
+
+    footer vaadin-button:first-child {
+      margin-right: var(--lumo-space-s);
+    }
+  `;
+
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
     return root;
   }
 
-  static get styles() {
-    return css`
-      #container {
-        align-items: stretch;
-        border: 1px solid var(--lumo-contrast-20pct);
-        max-width: 100%;
-        height: 400px;
-        width: 360px;
-      }
-
-      header {
-        align-items: center;
-        display: flex;
-        border-bottom: 1px solid var(--lumo-contrast-20pct);
-        padding: var(--lumo-space-m);
-      }
-
-      header h2 {
-        margin: 0;
-      }
-
-      header vaadin-icon {
-        box-sizing: border-box;
-        height: var(--lumo-icon-size-m);
-        margin-right: var(--lumo-space-m);
-        padding: calc(var(--lumo-space-xs) / 2);
-        width: var(--lumo-icon-size-m);
-      }
-
-      footer {
-        padding: var(--lumo-space-wide-m);
-      }
-
-      footer vaadin-button:first-child {
-        margin-right: var(--lumo-space-s);
-      }
-    `;
-  }
-
-  render() {
+  protected override render() {
     return html`
       <vaadin-vertical-layout id="container">
         <header>

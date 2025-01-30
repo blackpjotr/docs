@@ -1,0 +1,28 @@
+---
+title: Styling
+page-title: How to style the Split Layout component | Vaadin
+description: Styling API reference for the Split Layout component.
+meta-description: Learn various ways to customize and style the Vaadin Split Layout component in your applications.
+order: 50
+---
+= Styling
+
+include::../_styling-section-intros.adoc[tag=selectors]
+
+
+Root element:: `vaadin-split-layout`
+
+
+=== States
+
+Horizontal split:: `vaadin-split-layout+++<wbr>+++**[orientation="horizontal"]**`
+Vertical split:: `vaadin-split-layout+++<wbr>+++**[orientation="vertical"]**`
+
+
+=== Parts
+
+Splitter bar:: `vaadin-split-layout+++<wbr>+++**::part(splitter)**`
+Splitter drag handle:: `vaadin-split-layout+++<wbr>+++**::part(handle)**`
+Splitter visual handle:: `vaadin-split-layout+++<wbr>+++**::part(handle)::after**`
+First content:: `vaadin-split-layout+++<wbr>+++** > [slot="primary"]**`
+Second content:: `vaadin-split-layout+++<wbr>+++** > [slot="secondary"]**`

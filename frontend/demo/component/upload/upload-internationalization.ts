@@ -1,14 +1,14 @@
 import 'Frontend/demo/init'; // hidden-source-line
 import './upload-demo-helpers'; // hidden-source-line
+import '@vaadin/upload';
 import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import '@vaadin/upload';
 import type { UploadI18n } from '@vaadin/upload';
 import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('upload-internationalization')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -16,7 +16,7 @@ export class Example extends LitElement {
   }
 
   // tag::snippet[]
-  render() {
+  protected override render() {
     const i18n: UploadI18n = {
       dropFiles: {
         one: 'Raahaa tiedosto tähän',

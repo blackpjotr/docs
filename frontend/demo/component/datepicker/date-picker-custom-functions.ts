@@ -1,16 +1,15 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
-import { html, LitElement } from 'lit';
-import { customElement, query, state } from 'lit/decorators.js';
 import '@vaadin/date-picker';
-import type { DatePicker, DatePickerDate, DatePickerChangeEvent } from '@vaadin/date-picker';
-import { applyTheme } from 'Frontend/generated/theme';
 import dateFnsFormat from 'date-fns/format';
 import dateFnsParse from 'date-fns/parse';
+import { html, LitElement } from 'lit';
+import { customElement, query, state } from 'lit/decorators.js';
+import type { DatePicker, DatePickerChangeEvent, DatePickerDate } from '@vaadin/date-picker';
+import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('date-picker-custom-functions')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -24,7 +23,7 @@ export class Example extends LitElement {
   private selectedDateValue: string = dateFnsFormat(new Date(), 'yyyy-MM-dd');
 
   // tag::snippet[]
-  firstUpdated() {
+  protected override firstUpdated() {
     const formatDateIso8601 = (dateParts: DatePickerDate): string => {
       const { year, month, day } = dateParts;
       const date = new Date(year, month, day);
@@ -47,13 +46,15 @@ export class Example extends LitElement {
 
   // end::snippet[]
 
-  render() {
+  protected override render() {
     return html`
       <vaadin-date-picker
         label="Select a date:"
         value="${this.selectedDateValue}"
         helper-text="Date picker configured to use ISO 8601 format"
-        @change="${(e: DatePickerChangeEvent) => (this.selectedDateValue = e.target.value)}"
+        @change="${(event: DatePickerChangeEvent) => {
+          this.selectedDateValue = event.target.value;
+        }}"
       ></vaadin-date-picker>
     `;
   }

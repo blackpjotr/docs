@@ -1,22 +1,19 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
-import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
-
 import '@vaadin/button';
 import '@vaadin/dialog';
 import '@vaadin/grid';
 import '@vaadin/vertical-layout';
-import { dialogRenderer } from '@vaadin/dialog/lit.js';
-
-import { applyTheme } from 'Frontend/generated/theme';
-import type Person from 'Frontend/generated/com/vaadin/demo/domain/Person';
-import { getPeople } from 'Frontend/demo/domain/DataService';
+import { html, LitElement } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import type { DialogOpenedChangedEvent } from '@vaadin/dialog';
+import { dialogRenderer } from '@vaadin/dialog/lit.js';
+import { getPeople } from 'Frontend/demo/domain/DataService';
+import type Person from 'Frontend/generated/com/vaadin/demo/domain/Person';
+import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('dialog-resizable')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -27,14 +24,14 @@ export class Example extends LitElement {
   private dialogOpened = false;
 
   @state()
-  private people?: Person[];
+  private people: Person[] | undefined;
 
-  async firstUpdated() {
+  protected override async firstUpdated() {
     const { people } = await getPeople({ count: 50 });
     this.people = people;
   }
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <vaadin-dialog
@@ -42,7 +39,9 @@ export class Example extends LitElement {
         resizable
         draggable
         .opened="${this.dialogOpened}"
-        @opened-changed="${(e: DialogOpenedChangedEvent) => (this.dialogOpened = e.detail.value)}"
+        @opened-changed="${(event: DialogOpenedChangedEvent) => {
+          this.dialogOpened = event.detail.value;
+        }}"
         ${dialogRenderer(
           () => html`
             <vaadin-vertical-layout
@@ -62,7 +61,11 @@ export class Example extends LitElement {
         )}
       ></vaadin-dialog>
       <!-- end::snippet[] -->
-      <vaadin-button @click="${() => (this.dialogOpened = true)}"> Show dialog </vaadin-button>
+      <vaadin-button @click="${this.open}">Show dialog</vaadin-button>
     `;
+  }
+
+  private open() {
+    this.dialogOpened = true;
   }
 }

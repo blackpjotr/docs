@@ -1,39 +1,37 @@
 import 'Frontend/demo/init'; // hidden-source-line
-import { css, html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
 import '@vaadin/app-layout';
 import '@vaadin/grid';
+import { css, html, LitElement } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import { getPeople } from 'Frontend/demo/domain/DataService';
 import type Person from 'Frontend/generated/com/vaadin/demo/domain/Person';
 import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('app-layout-height-auto')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  static override styles = css`
+    h1 {
+      font-size: var(--lumo-font-size-l);
+      margin: var(--lumo-space-m);
+    }
+  `;
+
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
     return root;
   }
 
-  static get styles() {
-    return css`
-      h1 {
-        font-size: var(--lumo-font-size-l);
-        margin: var(--lumo-space-m);
-      }
-    `;
-  }
-
   @state()
   private items: Person[] = [];
 
-  async firstUpdated() {
+  protected override async firstUpdated() {
     const { people } = await getPeople({ count: 20 });
     this.items = people;
   }
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <vaadin-app-layout>

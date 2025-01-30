@@ -1,14 +1,13 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
+import '@vaadin/date-picker';
 import { html, LitElement } from 'lit';
 import { customElement, query } from 'lit/decorators.js';
-import '@vaadin/date-picker';
 import type { DatePicker } from '@vaadin/date-picker';
 import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('date-picker-internationalization')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -19,7 +18,7 @@ export class Example extends LitElement {
   @query('vaadin-date-picker')
   private datePicker!: DatePicker;
 
-  firstUpdated() {
+  protected override firstUpdated() {
     this.datePicker.i18n = {
       ...this.datePicker.i18n,
       monthNames: [
@@ -38,13 +37,12 @@ export class Example extends LitElement {
       ],
       weekdays: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
       weekdaysShort: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
-      week: 'Woche',
       today: 'Heute',
       cancel: 'Abbrechen',
     };
   }
 
-  render() {
+  protected override render() {
     return html`<vaadin-date-picker label="Sitzungsdatum"></vaadin-date-picker>`;
   }
   // end::snippet[]

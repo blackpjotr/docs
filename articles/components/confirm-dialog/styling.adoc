@@ -1,0 +1,34 @@
+---
+title: Styling
+page-title: How to style Confirm Dialog component | Vaadin components
+description: Styling API reference for the Confirm Dialog component.
+meta-description: Learn how to style the Vaadin Confirm Dialog component with custom themes and CSS. Discover tips and examples for creating visually consistent and unique dialogs.
+order: 50
+---
+= Styling
+
+include::../_styling-section-intros.adoc[tag=selectors]
+
+
+=== Overlay
+
+Root element:: `vaadin-confirm-dialog-overlay`
+Modality curtain (backdrop):: `vaadin-confirm-dialog-overlay+++<wbr>+++**::part(backdrop)**`
+Dialog surface:: `vaadin-confirm-dialog-overlay+++<wbr>+++**::part(overlay)**`
+
+=== Header
+
+Header:: `vaadin-confirm-dialog-overlay+++<wbr>+++**::part(header)**`
+Default title element:: `vaadin-confirm-dialog-overlay+++<wbr>+++** > [slot="header"]**`
+
+=== Content Area
+
+Content area:: `vaadin-confirm-dialog-overlay+++<wbr>+++**::part(content)**`
+Message:: `vaadin-confirm-dialog-overlay+++<wbr>+++**::part(message)**`
+
+=== Footer
+
+Footer:: `vaadin-confirm-dialog-overlay+++<wbr>+++**::part(footer)**`
+Confirm button:: `vaadin-confirm-dialog-overlay+++<wbr>+++** > [slot="confirm-button"]**`
+Reject button:: `vaadin-confirm-dialog-overlay+++<wbr>+++** > [slot="reject-button"]**`
+Cancel button:: `vaadin-confirm-dialog-overlay+++<wbr>+++** > [slot="cancel-button"]**`

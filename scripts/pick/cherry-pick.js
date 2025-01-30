@@ -13,6 +13,7 @@ const cmd = program
     .option('-d, --debug', 'run in debug mode')
     .option('-T, --tmp <tmp>', 'Temporary folder', './tmp')
     .option('-s, --branchSource <source>', 'source branch', 'latest')
+    .option('-s, --tagSource <tag|hash>', 'Tag or Hash in the source branch that should be used for picking changes', 'HEAD')
     .option('-t, --branchTarget <target>', 'target branch', 'dsp')
     .option('-c, --config <config>', 'config file', cfgDefault)
     .option('-r, --repo <repository>', 'repository', 'git@github.com:vaadin/docs.git')
@@ -147,6 +148,9 @@ async function cloneBranches() {
       log(`cloning repo=${cmd.repo} branch=${b} folder=${f} ...`)
       await run(`git clone -b ${b} ${cmd.repo} ${f}`);
     }
+    if (b == cmd.branchSource) {
+      await run (`git -C ${f} checkout ${cmd.tagSource}`)
+    }
   };
 }
 async function createPrBranch(folder, name) {
@@ -167,6 +171,10 @@ async function commitChanges(folder, message) {
     log(`Nothing to commit in ${folder}`);
   }
 }
+async function compileProject(folder) {
+  log(`Compiling project for production in ${folder} ...`);
+  await run(`mvn ${cmd.debug ? '' : '-q'} -f ${folder}/pom.xml clean package -Pproduction`);
+}
 
 async function main() {
   tmpSource = `${cmd.tmp}/${cmd.branchSource}`;
@@ -177,6 +185,7 @@ async function main() {
   await createPrBranch(tmpTarget, prBranch);
   log("Updating files")
   copyFolderRecursive("", "", config);
+  await compileProject(tmpTarget);
   commitChanges(tmpTarget, 'Update DSP branch from latest');
 }
 

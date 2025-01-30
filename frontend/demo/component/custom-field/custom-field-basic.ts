@@ -1,16 +1,16 @@
 import 'Frontend/demo/init'; // hidden-source-line
-import { html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
 import '@vaadin/custom-field';
 import '@vaadin/date-picker';
-import { applyTheme } from 'Frontend/generated/theme';
-import { Binder, field } from '@hilla/form';
+import { differenceInDays, isAfter, parseISO } from 'date-fns';
+import { html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
+import { Binder, field } from '@vaadin/hilla-lit-form';
 import AppointmentModel from 'Frontend/generated/com/vaadin/demo/domain/AppointmentModel';
-import { differenceInDays, parseISO, isAfter } from 'date-fns';
+import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('custom-field-basic')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -19,16 +19,7 @@ export class Example extends LitElement {
 
   private binder = new Binder(this, AppointmentModel);
 
-  firstUpdated() {
-    // Set `aria-label` for screen readers
-    const start = this.renderRoot.querySelector('#start > input') as HTMLInputElement;
-    start.setAttribute('aria-label', 'Start date');
-    start.removeAttribute('aria-labelledby');
-
-    const end = this.renderRoot.querySelector('#end > input') as HTMLInputElement;
-    end.setAttribute('aria-label', 'End date');
-    end.removeAttribute('aria-labelledby');
-
+  protected override firstUpdated() {
     this.binder.for(this.binder.model.enrollmentPeriod).addValidator({
       message: 'Dates cannot be more than 30 days apart',
       validate: (enrollmentPeriod: string) => {
@@ -55,18 +46,21 @@ export class Example extends LitElement {
     });
   }
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <vaadin-custom-field
         label="Enrollment period"
         helper-text="Cannot be longer than 30 days"
         required
-        ...="${field(this.binder.model.enrollmentPeriod)}"
+        ${field(this.binder.model.enrollmentPeriod)}
       >
-        <vaadin-date-picker id="start" placeholder="Start date"></vaadin-date-picker>
+        <vaadin-date-picker
+          accessible-name="Start date"
+          placeholder="Start date"
+        ></vaadin-date-picker>
         &ndash;
-        <vaadin-date-picker id="end" placeholder="End date"></vaadin-date-picker>
+        <vaadin-date-picker accessible-name="End date" placeholder="End date"></vaadin-date-picker>
       </vaadin-custom-field>
       <!-- end::snippet[] -->
     `;

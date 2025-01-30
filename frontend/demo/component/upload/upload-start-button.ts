@@ -1,9 +1,9 @@
 import 'Frontend/demo/init'; // hidden-source-line
-import { createFakeUploadFiles } from './upload-demo-helpers'; // hidden-source-line
+import '@vaadin/upload';
 import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import '@vaadin/upload';
 import { applyTheme } from 'Frontend/generated/theme';
+import { createFakeUploadFiles } from './upload-demo-helpers'; // hidden-source-line
 
 function createFakeFiles() {
   return createFakeUploadFiles([
@@ -17,14 +17,14 @@ function createFakeFiles() {
 
 @customElement('upload-start-button')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
     return root;
   }
 
-  render() {
+  protected override render() {
     return html`<vaadin-upload .files="${createFakeFiles()}"></vaadin-upload>`;
   }
 }

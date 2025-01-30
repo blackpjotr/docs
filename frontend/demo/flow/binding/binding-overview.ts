@@ -1,7 +1,4 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
-import { html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
 import '@vaadin/button';
 import '@vaadin/form-layout';
 import '@vaadin/form-layout/vaadin-form-item.js';
@@ -10,10 +7,12 @@ import '@vaadin/icon';
 import '@vaadin/icons';
 import '@vaadin/text-field';
 import '@vaadin/vertical-layout';
+import { html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
 
 @customElement('binding-overview')
 export class DataBindingExample extends LitElement {
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <vaadin-horizontal-layout>

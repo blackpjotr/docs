@@ -1,0 +1,31 @@
+---
+title: Styling
+page-title: How to style the Progress Bar component | Vaadin components
+description: Styling API reference for the Progress Bar component.
+meta-description: Enhance the look of your Vaadin Progress Bar component using CSS. Customize styles to align with your application's design.
+order: 50
+---
+= Styling
+
+include::../_styling-section-intros.adoc[tag=selectors]
+
+
+Root element:: `vaadin-progress-bar`
+
+
+=== States
+
+Indeterminate:: `vaadin-progress-bar+++<wbr>+++**[indeterminate]**`
+
+
+=== Parts
+
+Track (bar):: `vaadin-progress-bar+++<wbr>+++**::part(bar)**`
+Indicator (value):: `vaadin-progress-bar+++<wbr>+++**::part(value)**`
+
+
+=== Style Variants
+
+Contrast:: `vaadin-progress-bar+++<wbr>+++**[theme="contrast"]**`
+Success:: `vaadin-progress-bar+++<wbr>+++**[theme="success"]**`
+Error:: `vaadin-progress-bar+++<wbr>+++**[theme="error"]**`

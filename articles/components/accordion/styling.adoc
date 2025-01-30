@@ -1,0 +1,26 @@
+---
+title: Styling
+page-title: How to style the Accordion component | Vaadin components
+description: Styling API reference for the Accordion component.
+meta-description: Explore options to customize the appearance of the Accordion component in your Vaadin apps.
+order: 50
+---
+= Styling
+
+include::../_styling-section-intros.adoc[tag=selectors]
+
+Root element:: `vaadin-accordion`
+
+
+=== Panels
+Panel element:: `vaadin-accordion-panel`
+Opened panel:: `vaadin-accordion-panel+++<wbr>+++**[opened]**`
+Disabled panel:: `vaadin-accordion-panel+++<wbr>+++**[disabled]**`
+Panel body content wrapper:: `vaadin-accordion-panel+++<wbr>+++**::part(content)**`
+
+
+=== Panel Heading
+Heading element:: `vaadin-accordion-heading`
+Toggle:: `vaadin-accordion-heading+++<wbr>+++**::part(toggle)**`
+Toggle icon:: `vaadin-accordion-heading+++<wbr>+++**::part(toggle)::before**`
+Panel header content wrapper:: `vaadin-accordion-heading+++<wbr>+++**::part(content)**`

@@ -1,7 +1,7 @@
-import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
 import '@vaadin/button';
 import '@vaadin/horizontal-layout';
+import { html, LitElement } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 
 @customElement('fusion-application-events-basic')
 // tag::snippet[]
@@ -12,7 +12,7 @@ export class EventsBasic extends LitElement {
   @state()
   private count = 0;
 
-  render() {
+  protected override render() {
     return html`<vaadin-button @click="${this.onClick}">${this.caption}</vaadin-button>`;
   }
 

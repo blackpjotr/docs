@@ -1,16 +1,15 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
-import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
 import '@vaadin/horizontal-layout';
 import '@vaadin/radio-group';
+import { html, LitElement } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import { getCards } from 'Frontend/demo/domain/DataService';
 import type Card from 'Frontend/generated/com/vaadin/demo/domain/Card';
 import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('radio-button-presentation')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -18,17 +17,17 @@ export class Example extends LitElement {
   }
 
   @state()
-  private value?: string;
+  private value: string | undefined;
 
   @state()
   private items: Card[] = [];
 
-  async firstUpdated() {
+  protected override async firstUpdated() {
     this.items = await getCards();
     this.value = String(this.items[0].id);
   }
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <vaadin-radio-group label="Payment method" theme="vertical" .value="${this.value}">

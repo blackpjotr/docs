@@ -1,21 +1,20 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
-import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
 import '@vaadin/context-menu';
-import { contextMenuRenderer } from '@vaadin/context-menu/lit.js';
-import type { ContextMenuLitRenderer } from '@vaadin/context-menu/lit.js';
 import '@vaadin/grid';
-import type { Grid } from '@vaadin/grid';
 import '@vaadin/item';
 import '@vaadin/list-box';
+import { html, LitElement } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
+import type { ContextMenuLitRenderer } from '@vaadin/context-menu/lit.js';
+import { contextMenuRenderer } from '@vaadin/context-menu/lit.js';
+import type { Grid } from '@vaadin/grid';
 import { getPeople } from 'Frontend/demo/domain/DataService';
 import type Person from 'Frontend/generated/com/vaadin/demo/domain/Person';
 import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('grid-context-menu')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -25,7 +24,7 @@ export class Example extends LitElement {
   @state()
   private items: Person[] = [];
 
-  async firstUpdated() {
+  protected override async firstUpdated() {
     const { people } = await getPeople();
     this.items = people;
   }
@@ -53,7 +52,7 @@ export class Example extends LitElement {
     `;
   };
 
-  render() {
+  protected override render() {
     return html`
       <vaadin-context-menu ${contextMenuRenderer(this.renderMenu, [])}>
         <vaadin-grid .items="${this.items}" @vaadin-contextmenu="${this.onContextMenu}">

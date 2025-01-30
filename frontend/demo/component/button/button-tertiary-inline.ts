@@ -1,20 +1,19 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
+import '@vaadin/button';
 import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import '@vaadin/button';
 import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('button-tertiary-inline')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
     return root;
   }
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <vaadin-button theme="tertiary-inline">Tertiary inline</vaadin-button>

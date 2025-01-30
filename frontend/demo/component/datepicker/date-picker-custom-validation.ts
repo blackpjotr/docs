@@ -1,15 +1,14 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
+import '@vaadin/date-picker';
 import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import '@vaadin/date-picker';
-import { Binder, field } from '@hilla/form';
-import { applyTheme } from 'Frontend/generated/theme';
+import { Binder, field } from '@vaadin/hilla-lit-form';
 import AppointmentModel from 'Frontend/generated/com/vaadin/demo/domain/AppointmentModel';
+import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('date-picker-custom-validation')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -19,7 +18,7 @@ export class Example extends LitElement {
   // tag::snippet[]
   private binder = new Binder(this, AppointmentModel);
 
-  firstUpdated() {
+  protected override firstUpdated() {
     this.binder.for(this.binder.model.startDate).addValidator({
       message: 'Select a weekday',
       validate: (startDate: string) => {
@@ -30,12 +29,12 @@ export class Example extends LitElement {
     });
   }
 
-  render() {
+  protected override render() {
     return html`
       <vaadin-date-picker
         label="Meeting date"
         helper-text="Mondays – Fridays only"
-        ...="${field(this.binder.model.startDate)}"
+        ${field(this.binder.model.startDate)}
       ></vaadin-date-picker>
     `;
   }

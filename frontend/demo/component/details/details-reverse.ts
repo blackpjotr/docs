@@ -1,25 +1,22 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
+import '@vaadin/details';
 import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import '@vaadin/details';
 import { applyTheme } from 'Frontend/generated/theme';
 
-// tag::snippet[]
 @customElement('details-reverse')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
     return root;
   }
 
-  render() {
+  protected override render() {
+    // tag::snippet[]
     return html`
-      <vaadin-details opened theme="reverse">
-        <div slot="summary">Members (8)</div>
-
+      <vaadin-details summary="Members (8)" opened theme="reverse">
         <ul>
           <li>Blake Martin</li>
           <li>Caroline Clark</li>
@@ -32,6 +29,6 @@ export class Example extends LitElement {
         </ul>
       </vaadin-details>
     `;
+    // end::snippet[]
   }
 }
-// end::snippet[]

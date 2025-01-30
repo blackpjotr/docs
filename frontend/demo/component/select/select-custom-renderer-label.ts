@@ -1,20 +1,19 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
-import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
 import '@vaadin/item';
 import '@vaadin/list-box';
 import '@vaadin/select';
+import { html, LitElement } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import { selectRenderer } from '@vaadin/select/lit.js';
-import { applyTheme } from 'Frontend/generated/theme';
-import type Person from 'Frontend/generated/com/vaadin/demo/domain/Person';
 import { getPeople } from 'Frontend/demo/domain/DataService';
+import type Person from 'Frontend/generated/com/vaadin/demo/domain/Person';
+import { applyTheme } from 'Frontend/generated/theme';
 
 const formatPersonFullName = (person: Person) => `${person.firstName} ${person.lastName}`;
 
 @customElement('select-custom-renderer-label')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -24,11 +23,11 @@ export class Example extends LitElement {
   @state()
   private people: Person[] = [];
 
-  async firstUpdated() {
+  protected override async firstUpdated() {
     this.people = (await getPeople({ count: 5 })).people;
   }
 
-  render() {
+  protected override render() {
     return html`
       <vaadin-select
         label="Assignee"

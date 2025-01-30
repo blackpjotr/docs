@@ -1,27 +1,24 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
-import { css, html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
 import '@vaadin/button';
 import '@vaadin/icon';
 import '@vaadin/icons';
 import '@vaadin/text-field';
 import '@vaadin/text-area';
+import { css, html, LitElement } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
+import { Notification } from '@vaadin/notification';
+import type { TextFieldValueChangedEvent } from '@vaadin/text-field';
 import { applyTheme } from 'Frontend/generated/theme';
 import template from './dashboard-template.json';
-import { TextFieldValueChangedEvent } from '@vaadin/text-field';
-import { Notification } from '@vaadin/notification';
 
 @customElement('new-relic-dashboard-generator')
 export class DashboardGenerator extends LitElement {
-  static get styles() {
-    return css`
-      .json-result {
-        width: 100%;
-        height: 200px;
-      }
-    `;
-  }
+  static override styles = css`
+    .json-result {
+      width: 100%;
+      height: 200px;
+    }
+  `;
 
   @state()
   accountId = '';
@@ -29,7 +26,7 @@ export class DashboardGenerator extends LitElement {
   @state()
   json = '';
 
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -54,13 +51,14 @@ export class DashboardGenerator extends LitElement {
     });
   }
 
-  render() {
+  protected override render() {
     return html`
       <vaadin-text-field
         label="Account ID"
         .value="${this.accountId}"
-        @value-changed="${(event: TextFieldValueChangedEvent) =>
-          (this.accountId = event.detail.value)}"
+        @value-changed="${(event: TextFieldValueChangedEvent) => {
+          this.accountId = event.detail.value;
+        }}"
       >
         <vaadin-icon slot="prefix" icon="vaadin:user"></vaadin-icon>
       </vaadin-text-field>

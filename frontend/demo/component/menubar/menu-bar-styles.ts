@@ -1,28 +1,25 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
+import '@vaadin/menu-bar';
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import '@vaadin/menu-bar';
 import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('menu-bar-styles')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  static override styles = css`
+    vaadin-menu-bar {
+      display: inline-block;
+    }
+  `;
+
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
     return root;
   }
 
-  static get styles() {
-    return css`
-      vaadin-menu-bar {
-        display: inline-block;
-      }
-    `;
-  }
-
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <vaadin-menu-bar

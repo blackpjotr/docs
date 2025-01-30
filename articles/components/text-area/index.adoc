@@ -1,0 +1,306 @@
+---
+tab-title: Usage
+layout: tabbed-page
+title: Text Area
+page-title: Text Area component | Vaadin components
+description: Text Area is an input field component that allows entry of multiple lines of text.
+meta-description: Implement and customize the Text Area component in your Vaadin applications for multi-line user input.
+page-links:
+  - 'API: https://cdn.vaadin.com/vaadin-web-components/{moduleNpmVersion:@vaadin/text-field}/#/elements/vaadin-text-area[TypeScript] / https://vaadin.com/api/platform/{moduleMavenVersion:com.vaadin:vaadin}/com/vaadin/flow/component/textfield/TextArea.html[Java]'
+  - 'Source: https://github.com/vaadin/web-components/tree/v{moduleNpmVersion:@vaadin/text-field}/packages/text-area[TypeScript] / https://github.com/vaadin/flow-components/tree/{moduleMavenVersion:com.vaadin:vaadin}/vaadin-text-field-flow-parent[Java]'
+---
+:tag-name: vaadin-text-area
+
+
+= Text Area
+
+// tag::description[]
+Text Area is an input field component that allows entry of multiple lines of text.
+// end::description[]
+
+[.example]
+--
+ifdef::lit[]
+[source,html]
+----
+include::{root}/frontend/demo/component/textarea/text-area-basic.ts[render,tags=snippet,indent=0,group=Lit]
+----
+endif::[]
+
+ifdef::flow[]
+[source,java]
+----
+include::{root}/src/main/java/com/vaadin/demo/component/textarea/TextAreaBasic.java[render,tags=snippet,indent=0,group=Flow]
+----
+endif::[]
+
+ifdef::react[]
+[source,tsx]
+----
+include::{root}/frontend/demo/component/textarea/react/text-area-basic.tsx[render,tags=snippet,indent=0,group=React]
+----
+endif::[]
+--
+
+Text Area is typically used for descriptions, comments, and other longer free-form content.
+
+
+== Automatic Height Adjustment
+
+Unless set to a fixed height, Text Area adjusts its height automatically based on its content. The default and minimum height is two rows of text.
+
+[.example]
+--
+ifdef::lit[]
+[source,html]
+----
+include::{root}/frontend/demo/component/textarea/text-area-auto-height.ts[render,tags=snippet,indent=0,group=Lit]
+----
+endif::[]
+
+ifdef::flow[]
+[source,java]
+----
+include::{root}/src/main/java/com/vaadin/demo/component/textarea/TextAreaAutoHeight.java[render,tags=snippet,indent=0,group=Flow]
+----
+endif::[]
+
+ifdef::react[]
+[source,tsx]
+----
+include::{root}/frontend/demo/component/textarea/react/text-area-auto-height.tsx[render,tags=snippet,indent=0,group=React]
+----
+endif::[]
+--
+
+
+=== Minimum & Maximum Height
+
+The automatic resizing can be restricted to a minimum and maximum height like so:
+
+[.example]
+--
+ifdef::lit[]
+[source,html]
+----
+include::{root}/frontend/demo/component/textarea/text-area-height.ts[render,tags=snippet,indent=0,group=Lit]
+----
+endif::[]
+
+ifdef::flow[]
+[source,java]
+----
+include::{root}/src/main/java/com/vaadin/demo/component/textarea/TextAreaHeight.java[render,tags=snippet,indent=0,group=Flow]
+----
+endif::[]
+
+ifdef::react[]
+[source,tsx]
+----
+include::{root}/frontend/demo/component/textarea/react/text-area-height.tsx[render,tags=snippet,indent=0,group=React]
+----
+endif::[]
+--
+
+[role="since:com.vaadin:vaadin@V24.6"]
+=== Minimum & Maximum Rows
+
+Alternatively, the minimum and maximum height can be constrained to a specific number of text rows like so:
+
+[.example]
+--
+ifdef::lit[]
+[source,html]
+----
+<source-info group="Lit"></source-info>
+<vaadin-text-area min-rows="4" max-rows="8"></vaadin-text-area>
+----
+endif::[]
+
+ifdef::flow[]
+[source,java]
+----
+<source-info group="Flow"></source-info>
+TextArea textArea = new TextArea();
+textArea.setMinRows(4);
+textArea.setMaxRows(8);
+----
+endif::[]
+
+ifdef::react[]
+[source,tsx]
+----
+<source-info group="React"></source-info>
+<TextArea minRows={4} maxRows={8} />
+----
+endif::[]
+--
+
+// Basic Features
+
+include::{articles}/components/_input-field-common-features.adoc[tags=basic-intro;label;helper;placeholder;tooltip;clear-button;prefix-and-suffix;aria-labels]
+
+[.example]
+--
+ifdef::lit[]
+[source,typescript]
+----
+include::{root}/frontend/demo/component/textarea/text-area-basic-features.ts[render,tags=snippet,indent=0,group=Lit]
+----
+endif::[]
+
+ifdef::flow[]
+[source,java]
+----
+include::{root}/src/main/java/com/vaadin/demo/component/textarea/TextAreaBasicFeatures.java[render,tags=snippet,indent=0,group=Flow]
+----
+endif::[]
+
+ifdef::react[]
+[source,tsx]
+----
+include::{root}/frontend/demo/component/textarea/react/text-area-basic-features.tsx[render,tags=snippet,indent=0,group=React]
+----
+endif::[]
+--
+
+
+[.collapsible-list]
+== Validation
+
+Text Area provides a validation mechanism based on constraints. Constraints allow you to define criteria that the value must meet to be considered valid. Validation occurs typically when the user initiates a value change, for example by entering input and pressing kbd:[Enter]. If the value is invalid, the field is highlighted in red, and an error message appears underneath the input. Certain constraints, however, can proactively prevent users from entering characters that would result in an invalid value.
+
+Below is a list of supported constraints with more detailed information:
+
+include::{articles}/components/_input-field-common-features.adoc[tags=required;pattern;min-and-max-length;allowed-chars]
+
+[.example]
+--
+ifdef::lit[]
+[source,typescript]
+----
+include::{root}/frontend/demo/component/textarea/text-area-validation.ts[render,tags=snippet,indent=0,group=Lit]
+----
+endif::[]
+
+ifdef::flow[]
+[source,java]
+----
+include::{root}/src/main/java/com/vaadin/demo/component/textarea/TextAreaValidation.java[render,tags=snippet,indent=0,group=Flow]
+----
+endif::[]
+
+ifdef::react[]
+[source,tsx]
+----
+include::{root}/frontend/demo/component/textarea/react/text-area-validation.tsx[render,tags=snippet,indent=0,group=React]
+----
+endif::[]
+--
+
+It's important to ensure an appropriate error message is configured for each constraint violation to provide users with clear feedback.
+
+include::{articles}/components/_input-field-common-features.adoc[tags=binder]
+
+
+// Readonly and disabled
+
+include::{articles}/components/_input-field-common-features.adoc[tag=readonly-and-disabled]
+
+[.example]
+--
+ifdef::lit[]
+[source,typescript]
+----
+include::{root}/frontend/demo/component/textarea/text-area-readonly-and-disabled.ts[render,tags=snippet,indent=0,group=Lit]
+----
+endif::[]
+
+ifdef::flow[]
+[source,java]
+----
+include::{root}/src/main/java/com/vaadin/demo/component/textarea/TextAreaReadonlyAndDisabled.java[render,tags=snippet,indent=0,group=Flow]
+----
+endif::[]
+
+ifdef::react[]
+[source,tsx]
+----
+include::{root}/frontend/demo/component/textarea/react/text-area-readonly-and-disabled.tsx[render,tags=snippet,indent=0,group=React]
+----
+endif::[]
+--
+
+
+// Style Variants
+
+include::{articles}/components/_input-field-common-features.adoc[tags=styles-intro;text-alignment;small-variant;helper-above-field;borders]
+
+[.example]
+--
+ifdef::lit[]
+[source,typescript]
+----
+include::{root}/frontend/demo/component/textarea/text-area-styles.ts[render,tags=snippet,indent=0,group=Lit]
+----
+endif::[]
+
+ifdef::flow[]
+[source,java]
+----
+include::{root}/src/main/java/com/vaadin/demo/component/textarea/TextAreaStyles.java[render,tags=snippet,indent=0,group=Flow]
+----
+endif::[]
+
+ifdef::react[]
+[source,tsx]
+----
+include::{root}/frontend/demo/component/textarea/react/text-area-styles.tsx[render,tags=snippet,indent=0,group=React]
+----
+endif::[]
+--
+
+
+== Character Counter
+
+Longer free-form inputs are often capped at a certain character limit. The current character count and upper limit should be displayed to the user, for example by using the Helper feature:
+
+[.example]
+--
+ifdef::lit[]
+[source,html]
+----
+include::{root}/frontend/demo/component/textarea/text-area-helper.ts[render,tags=snippet,indent=0,group=Lit]
+----
+endif::[]
+
+ifdef::flow[]
+[source,java]
+----
+include::{root}/src/main/java/com/vaadin/demo/component/textarea/TextAreaHelper.java[render,tags=snippet,indent=0,group=Flow]
+----
+endif::[]
+
+ifdef::react[]
+[source,tsx]
+----
+include::{root}/frontend/demo/component/textarea/react/text-area-helper.tsx[render,tags=snippet,indent=0,group=React]
+----
+endif::[]
+--
+
+== Related Components
+
+[cols="1,2"]
+|===
+|Component |Usage Recommendation
+
+|<<../text-field#,Text Field>>
+|Basic single-line text input.
+
+|<<../rich-text-editor#,Rich Text Editor>>
+|Multi-line text entry with rich formatting support.
+|===
+
+
+[discussion-id]`79CE0145-8514-417E-A033-6AB79E7BF86D`

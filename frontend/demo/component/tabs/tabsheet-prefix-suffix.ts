@@ -1,24 +1,23 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
-import { html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
 import '@vaadin/button';
 import '@vaadin/icon';
 import '@vaadin/icons';
 import '@vaadin/tabs';
 import '@vaadin/tabsheet';
+import { html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('tabsheet-prefix-suffix')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
     return root;
   }
 
-  render() {
+  protected override render() {
     return html`
       <vaadin-tabsheet>
         <!-- tag::snippet[] -->

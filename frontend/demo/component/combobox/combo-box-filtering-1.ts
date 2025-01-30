@@ -1,15 +1,14 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
+import '@vaadin/combo-box';
 import { html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import '@vaadin/combo-box';
 import { getCountries } from 'Frontend/demo/domain/DataService';
 import type Country from 'Frontend/generated/com/vaadin/demo/domain/Country';
 import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('combo-box-filtering-1')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -19,11 +18,11 @@ export class Example extends LitElement {
   @state()
   private items: Country[] = [];
 
-  async firstUpdated() {
+  protected override async firstUpdated() {
     this.items = await getCountries();
   }
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <vaadin-combo-box

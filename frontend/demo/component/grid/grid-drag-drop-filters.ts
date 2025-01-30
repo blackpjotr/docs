@@ -1,9 +1,8 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
-import { html, LitElement } from 'lit';
-import { customElement, query, state } from 'lit/decorators.js';
 import '@vaadin/grid';
 import '@vaadin/grid/vaadin-grid-tree-column.js';
+import { html, LitElement } from 'lit';
+import { customElement, query, state } from 'lit/decorators.js';
 import type {
   Grid,
   GridDataProviderCallback,
@@ -20,7 +19,7 @@ import { applyTheme } from 'Frontend/generated/theme';
 // tag::snippet[]
 @customElement('grid-drag-drop-filters')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -31,7 +30,7 @@ export class Example extends LitElement {
   private grid!: Grid<Person>;
 
   @state()
-  private draggedItem?: Person;
+  private draggedItem: Person | undefined;
 
   @state()
   private items: Person[] = [];
@@ -42,7 +41,7 @@ export class Example extends LitElement {
   @state()
   private expandedItems: Person[] = [];
 
-  async firstUpdated() {
+  protected override async firstUpdated() {
     const { people } = await getPeople();
     this.items = people;
     this.managers = this.items.filter((item) => item.manager);
@@ -72,11 +71,12 @@ export class Example extends LitElement {
     callback(result, result.length);
   };
 
-  render() {
+  protected override render() {
     return html`
       <vaadin-grid
         .dataProvider="${this.dataProvider}"
         .itemIdPath="${'id'}"
+        .itemHasChildrenPath="${'manager'}"
         .expandedItems="${this.expandedItems}"
         @expanded-items-changed="${(event: GridExpandedItemsChangedEvent<Person>) => {
           this.expandedItems = event.detail.value;
@@ -87,7 +87,7 @@ export class Example extends LitElement {
           this.draggedItem = event.detail.draggedItems[0];
         }}"
         @grid-dragend="${() => {
-          delete this.draggedItem;
+          this.draggedItem = undefined;
         }}"
         @grid-drop="${(event: GridDropEvent<Person>) => {
           const manager = event.detail.dropTargetItem;
@@ -111,10 +111,7 @@ export class Example extends LitElement {
           );
         }}"
       >
-        <vaadin-grid-tree-column
-          path="firstName"
-          item-has-children-path="manager"
-        ></vaadin-grid-tree-column>
+        <vaadin-grid-tree-column path="firstName"></vaadin-grid-tree-column>
         <vaadin-grid-column path="lastName"></vaadin-grid-column>
         <vaadin-grid-column path="email"></vaadin-grid-column>
       </vaadin-grid>

@@ -1,12 +1,12 @@
 import '../../../init'; // hidden-source-line
-import { html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
 import '@vaadin/horizontal-layout';
 import '@vaadin/tabs';
+import { html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
 
 @customElement('fusion-application-ui-menu')
 export class UiMenu extends LitElement {
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <vaadin-horizontal-layout>

@@ -1,0 +1,12 @@
+---
+title: Troubleshooting
+page-title: How to troubleshoot Vaadin Design System Publisher issues
+description: This page describes issues you might encounter while using Design System Publisher.
+meta-description: Learn to diagnose and resolve common problems when using the Vaadin Design System Publisher.
+---
+
+= Troubleshooting
+
+include::{root}/articles/flow/kb/index.adoc[tag=dsp]
+
+[discussion-id]`82E98556-B62A-467D-947F-94C586E8A463`

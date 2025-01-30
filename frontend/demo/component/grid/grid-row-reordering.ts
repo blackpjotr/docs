@@ -1,12 +1,11 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
-import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
 import '@vaadin/avatar';
 import '@vaadin/grid';
-import { columnBodyRenderer } from '@vaadin/grid/lit.js';
-import type { GridColumnBodyLitRenderer } from '@vaadin/grid/lit.js';
+import { html, LitElement } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import type { GridDragStartEvent, GridDropEvent } from '@vaadin/grid';
+import type { GridColumnBodyLitRenderer } from '@vaadin/grid/lit.js';
+import { columnBodyRenderer } from '@vaadin/grid/lit.js';
 import { getPeople } from 'Frontend/demo/domain/DataService';
 import type Person from 'Frontend/generated/com/vaadin/demo/domain/Person';
 import { applyTheme } from 'Frontend/generated/theme';
@@ -14,7 +13,7 @@ import { applyTheme } from 'Frontend/generated/theme';
 // tag::snippet[]
 @customElement('grid-row-reordering')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -25,25 +24,25 @@ export class Example extends LitElement {
   private items: Person[] = [];
 
   @state()
-  private draggedItem?: Person;
+  private draggedItem: Person | undefined;
 
-  async firstUpdated() {
+  protected override async firstUpdated() {
     const { people } = await getPeople();
     this.items = people;
   }
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <vaadin-grid
         .items="${this.items}"
         rows-draggable
-        drop-mode="between"
+        .dropMode=${this.draggedItem ? 'between' : undefined}
         @grid-dragstart="${(event: GridDragStartEvent<Person>) => {
           this.draggedItem = event.detail.draggedItems[0];
         }}"
         @grid-dragend="${() => {
-          delete this.draggedItem;
+          this.draggedItem = undefined;
         }}"
         @grid-drop="${(event: GridDropEvent<Person>) => {
           const { dropTargetItem, dropLocation } = event.detail;
@@ -79,7 +78,6 @@ export class Example extends LitElement {
     <vaadin-avatar
       img="${person.pictureUrl}"
       name="${person.firstName} ${person.lastName}"
-      alt="User avatar"
     ></vaadin-avatar>
   `;
 }

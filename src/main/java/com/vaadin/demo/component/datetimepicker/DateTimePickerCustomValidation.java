@@ -1,6 +1,7 @@
 package com.vaadin.demo.component.datetimepicker;
 
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
+import com.vaadin.flow.component.datetimepicker.DateTimePicker.DateTimePickerI18n;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.Route;
@@ -21,25 +22,26 @@ public class DateTimePickerCustomValidation extends Div {
         dateTimePicker
                 .setHelperText("Open Mondays-Fridays, 8:00-12:00, 13:00-16:00");
         dateTimePicker.setStep(Duration.ofMinutes(30));
+        dateTimePicker.setI18n(new DateTimePickerI18n()
+                .setBadInputErrorMessage("Invalid date or time format"));
         add(dateTimePicker);
 
+        String errorMessage = "The selected day of week or time is not available";
         Binder<Appointment> binder = new Binder<>(Appointment.class);
         binder.forField(dateTimePicker).withValidator(startDateTime -> {
             boolean validWeekDay = startDateTime.getDayOfWeek().getValue() >= 1
                     && startDateTime.getDayOfWeek().getValue() <= 5;
             return validWeekDay;
-        }, "The selected day of week is not available")
-                .withValidator(startDateTime -> {
-                    LocalTime startTime = LocalTime.of(startDateTime.getHour(),
-                            startDateTime.getMinute());
-                    boolean validTime = !(LocalTime.of(8, 0).isAfter(startTime)
-                            || (LocalTime.of(12, 0).isBefore(startTime)
-                                    && LocalTime.of(13, 0).isAfter(startTime))
-                            || LocalTime.of(16, 0).isBefore(startTime));
-                    return validTime;
-                }, "The selected time is not available")
-                .bind(Appointment::getStartDateTime,
-                        Appointment::setStartDateTime);
+        }, errorMessage).withValidator(startDateTime -> {
+            LocalTime startTime = LocalTime.of(startDateTime.getHour(),
+                    startDateTime.getMinute());
+            boolean validTime = !(LocalTime.of(8, 0).isAfter(startTime)
+                    || (LocalTime.of(12, 0).isBefore(startTime)
+                            && LocalTime.of(13, 0).isAfter(startTime))
+                    || LocalTime.of(16, 0).isBefore(startTime));
+            return validTime;
+        }, errorMessage).bind(Appointment::getStartDateTime,
+                Appointment::setStartDateTime);
         // end::snippet[]
     }
 

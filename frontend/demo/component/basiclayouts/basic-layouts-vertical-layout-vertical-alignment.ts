@@ -1,55 +1,36 @@
 import 'Frontend/demo/init'; // hidden-source-line
-import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
-import { applyTheme } from 'Frontend/generated/theme';
-import '@vaadin/button';
-import '@vaadin/radio-group';
-import type { RadioGroupValueChangedEvent } from '@vaadin/radio-group';
 import '@vaadin/vertical-layout';
+import { html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
+import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('basic-layouts-vertical-layout-vertical-alignment')
 export class Example extends LitElement {
-  constructor() {
-    super();
+  connectedCallback() {
+    super.connectedCallback();
     this.classList.add('basic-layouts-example');
   }
 
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
     return root;
   }
 
-  // tag::snippet[]
-  @state()
-  justifyContent = 'flex-start';
-
-  render() {
+  protected override render() {
     return html`
+      <!-- tag::snippet[] -->
       <vaadin-vertical-layout
         theme="spacing padding"
-        class="height-5xl"
-        style="justify-content: ${this.justifyContent}"
+        class="height-4xl"
+        style="justify-content: center"
       >
-        <vaadin-button>Button 1</vaadin-button>
-        <vaadin-button>Button 2</vaadin-button>
-        <vaadin-button>Button 3</vaadin-button>
+        <div class="example-item">Item 1</div>
+        <div class="example-item">Item 2</div>
+        <div class="example-item">Item 3</div>
       </vaadin-vertical-layout>
-      <vaadin-radio-group
-        label="Vertical alignment"
-        .value="${this.justifyContent}"
-        @value-changed="${(e: RadioGroupValueChangedEvent) =>
-          (this.justifyContent = e.detail.value)}"
-      >
-        <vaadin-radio-button value="flex-start" label="Start (default)"></vaadin-radio-button>
-        <vaadin-radio-button value="center" label="Center"></vaadin-radio-button>
-        <vaadin-radio-button value="flex-end" label="End"></vaadin-radio-button>
-        <vaadin-radio-button value="space-between" label="Between"></vaadin-radio-button>
-        <vaadin-radio-button value="space-around" label="Around"></vaadin-radio-button>
-        <vaadin-radio-button value="space-evenly" label="Evenly"></vaadin-radio-button>
-      </vaadin-radio-group>
+      <!-- end::snippet[] -->
     `;
   }
-  // end::snippet[]
 }

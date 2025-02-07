@@ -1,16 +1,15 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
-import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
 import '@vaadin/icon';
 import '@vaadin/icons';
 import '@vaadin/menu-bar';
 import '@vaadin/tooltip';
+import { html, LitElement } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('menu-bar-tooltip')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -44,7 +43,7 @@ export class Example extends LitElement {
   ];
   // end::snippet[]
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippethtml[] -->
       <vaadin-menu-bar .items="${this.items}" theme="icon">
@@ -55,7 +54,7 @@ export class Example extends LitElement {
   }
 
   createItem(iconName: string) {
-    const item = document.createElement('vaadin-context-menu-item');
+    const item = document.createElement('vaadin-menu-bar-item');
     const icon = document.createElement('vaadin-icon');
     icon.setAttribute('icon', `vaadin:${iconName}`);
     item.appendChild(icon);

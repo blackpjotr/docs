@@ -1,38 +1,26 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
-import { html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
 import '@vaadin/progress-bar';
 import '@vaadin/vertical-layout';
+import { html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('progress-bar-theme-variants')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
     return root;
   }
 
-  render() {
+  protected override render() {
     return html`
-      <vaadin-vertical-layout theme="spacing" style="color: var(--lumo-secondary-text-color);">
+      <vaadin-vertical-layout theme="spacing">
         <!-- tag::snippet[] -->
-        <div style="width: 100%;">
-          <div>Transferring files... (60/120)</div>
-          <vaadin-progress-bar value="0.5" theme="contrast"></vaadin-progress-bar>
-        </div>
-
-        <div style="width: 100%;">
-          <div>Tasks (15/20)</div>
-          <vaadin-progress-bar value="0.75" theme="success"></vaadin-progress-bar>
-        </div>
-
-        <div style="width: 100%;">
-          <div>Tasks (4/20)</div>
-          <vaadin-progress-bar value="0.2" theme="error"></vaadin-progress-bar>
-        </div>
+        <vaadin-progress-bar value="0.5" theme="contrast"></vaadin-progress-bar>
+        <vaadin-progress-bar value="0.75" theme="success"></vaadin-progress-bar>
+        <vaadin-progress-bar value="0.2" theme="error"></vaadin-progress-bar>
         <!-- end::snippet[] -->
       </vaadin-vertical-layout>
     `;

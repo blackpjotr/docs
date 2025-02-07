@@ -1,15 +1,14 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
-import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
 import '@vaadin/icon';
 import '@vaadin/icons';
 import '@vaadin/menu-bar';
+import { html, LitElement } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('menu-bar-combo-buttons')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -27,7 +26,7 @@ export class Example extends LitElement {
   ];
   // end::snippet[]
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippethtml[] -->
       <vaadin-menu-bar theme="icon primary" .items="${this.items}"></vaadin-menu-bar>
@@ -36,7 +35,7 @@ export class Example extends LitElement {
   }
 
   private createItem() {
-    const item = document.createElement('vaadin-context-menu-item');
+    const item = document.createElement('vaadin-menu-bar-item');
     const icon = document.createElement('vaadin-icon');
     item.setAttribute('aria-label', 'Other save options');
     icon.setAttribute('icon', `vaadin:chevron-down`);

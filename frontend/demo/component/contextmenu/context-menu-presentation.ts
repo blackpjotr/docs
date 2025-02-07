@@ -1,24 +1,23 @@
 import 'Frontend/demo/init'; // hidden-source-line
-import { html, LitElement, render } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
 import '@vaadin/avatar';
 import '@vaadin/context-menu';
-import type { ContextMenuItem } from '@vaadin/context-menu';
 import '@vaadin/grid';
-import { columnBodyRenderer } from '@vaadin/grid/lit.js';
-import type { GridColumnBodyLitRenderer } from '@vaadin/grid/lit.js';
-import type { Grid } from '@vaadin/grid';
+import '@vaadin/horizontal-layout';
 import '@vaadin/icon';
 import '@vaadin/icons';
-import '@vaadin/horizontal-layout';
 import '@vaadin/vertical-layout';
+import { html, LitElement, render } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
+import type { ContextMenuItem } from '@vaadin/context-menu';
+import type { Grid } from '@vaadin/grid';
+import { columnBodyRenderer } from '@vaadin/grid/lit.js';
 import { getPeople } from 'Frontend/demo/domain/DataService';
 import type Person from 'Frontend/generated/com/vaadin/demo/domain/Person';
 import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('context-menu-presentation')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -29,10 +28,10 @@ export class Example extends LitElement {
   private gridItems: Person[] = [];
 
   @state()
-  private items?: ContextMenuItem[];
+  private items: ContextMenuItem[] | undefined;
 
   // tag::snippet[]
-  async firstUpdated() {
+  protected override async firstUpdated() {
     const { people } = await getPeople({ count: 10 });
 
     this.gridItems = people.slice(0, 5);
@@ -56,7 +55,7 @@ export class Example extends LitElement {
   }
   // end::snippet[]
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippethtml[] -->
       <vaadin-context-menu .items=${this.items}>
@@ -67,7 +66,10 @@ export class Example extends LitElement {
         >
           <vaadin-grid-column
             header="Applicant"
-            ${columnBodyRenderer(this.nameRenderer, [])}
+            ${columnBodyRenderer<Person>(
+              (person) => html`<span>${person.firstName} ${person.lastName}</span>`,
+              []
+            )}
           ></vaadin-grid-column>
           <vaadin-grid-column path="email"></vaadin-grid-column>
           <vaadin-grid-column header="Phone number" path="address.phone"></vaadin-grid-column>
@@ -79,7 +81,7 @@ export class Example extends LitElement {
 
   createItemsArray(people: Person[]) {
     return people.map((person, index) => {
-      const item = document.createElement('vaadin-item');
+      const item = document.createElement('vaadin-context-menu-item');
       if (index === 0) {
         item.setAttribute('selected', '');
       }
@@ -132,8 +134,4 @@ export class Example extends LitElement {
       e.stopPropagation();
     }
   }
-
-  private nameRenderer: GridColumnBodyLitRenderer<Person> = (person) => {
-    return html`<span>${person.firstName} ${person.lastName}</span>`;
-  };
 }

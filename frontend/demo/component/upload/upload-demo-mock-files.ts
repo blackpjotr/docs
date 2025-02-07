@@ -1,16 +1,5 @@
-import { createFakeUploadFiles, mockErrorXhrGenerator } from './upload-demo-helpers';
 import { Upload } from '@vaadin/upload';
-
-declare module '@vaadin/upload' {
-  class Upload {
-    createFakeFilesUploadBasic(): void;
-    createFakeFilesUploadAutoUploadDisabled(): void;
-    createFakeFilesUploadAllFiles(): void;
-    createFakeFilesUploadErrorMessagesA(): void;
-    createFakeFilesUploadErrorMessagesB(): void;
-    setupMockErrorResponse(): void;
-  }
-}
+import { createFakeUploadFiles, mockErrorXhrGenerator } from './upload-demo-helpers';
 
 // Used by `upload-basic.ts`
 export function createFakeFilesUploadBasic() {

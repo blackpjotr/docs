@@ -1,17 +1,16 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
-import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
 import '@vaadin/message-input';
 import '@vaadin/message-list';
+import { html, LitElement } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import type { MessageInputSubmitEvent } from '@vaadin/message-input';
 import type { MessageListItem } from '@vaadin/message-list';
-import { applyTheme } from 'Frontend/generated/theme';
 import { getPeople } from 'Frontend/demo/domain/DataService';
+import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('message-basic')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -21,7 +20,7 @@ export class Example extends LitElement {
   @state()
   private items: MessageListItem[] = [];
 
-  async firstUpdated() {
+  protected override async firstUpdated() {
     const { people } = await getPeople({ count: 1 });
     const person = people[0];
     this.items = [
@@ -41,7 +40,7 @@ export class Example extends LitElement {
     ];
   }
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <vaadin-message-list .items="${this.items}"></vaadin-message-list>

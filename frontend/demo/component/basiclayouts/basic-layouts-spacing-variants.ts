@@ -1,20 +1,19 @@
 import 'Frontend/demo/init'; // hidden-source-line
+import '@vaadin/radio-group';
+import '@vaadin/vertical-layout';
 import { html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { applyTheme } from 'Frontend/generated/theme';
-import '@vaadin/button';
-import '@vaadin/radio-group';
 import type { RadioGroupValueChangedEvent } from '@vaadin/radio-group';
-import '@vaadin/vertical-layout';
+import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('basic-layouts-spacing-variants')
 export class Example extends LitElement {
-  constructor() {
-    super();
+  connectedCallback() {
+    super.connectedCallback();
     this.classList.add('basic-layouts-example');
   }
 
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -25,21 +24,23 @@ export class Example extends LitElement {
   @state()
   private themeVariant = 'spacing-xl';
 
-  render() {
+  protected override render() {
     return html`
       <vaadin-vertical-layout
         theme="${this.themeVariant} padding"
-        class="height-5xl"
+        class="height-4xl"
         style="align-items: stretch"
       >
-        <vaadin-button>Button 1</vaadin-button>
-        <vaadin-button>Button 2</vaadin-button>
-        <vaadin-button>Button 3</vaadin-button>
+        <div class="example-item">Item 1</div>
+        <div class="example-item">Item 2</div>
+        <div class="example-item">Item 3</div>
       </vaadin-vertical-layout>
       <vaadin-radio-group
         label="Spacing variant"
         .value="${this.themeVariant}"
-        @value-changed="${(e: RadioGroupValueChangedEvent) => (this.themeVariant = e.detail.value)}"
+        @value-changed="${(event: RadioGroupValueChangedEvent) => {
+          this.themeVariant = event.detail.value;
+        }}"
       >
         <vaadin-radio-button value="spacing-xs" label="spacing-xs"></vaadin-radio-button>
         <vaadin-radio-button value="spacing-s" label="spacing-s"></vaadin-radio-button>

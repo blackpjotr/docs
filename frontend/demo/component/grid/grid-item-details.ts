@@ -1,12 +1,11 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
+import '@vaadin/form-layout';
+import '@vaadin/grid';
+import '@vaadin/text-field';
 import { html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import '@vaadin/grid';
-import { gridRowDetailsRenderer } from '@vaadin/grid/lit.js';
 import type { GridActiveItemChangedEvent } from '@vaadin/grid';
-import '@vaadin/form-layout';
-import '@vaadin/text-field';
+import { gridRowDetailsRenderer } from '@vaadin/grid/lit.js';
 import { getPeople } from 'Frontend/demo/domain/DataService';
 import type Person from 'Frontend/generated/com/vaadin/demo/domain/Person';
 import { applyTheme } from 'Frontend/generated/theme';
@@ -14,7 +13,7 @@ import { applyTheme } from 'Frontend/generated/theme';
 // tag::snippet[]
 @customElement('grid-item-details')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -27,22 +26,24 @@ export class Example extends LitElement {
   @state()
   private detailsOpenedItem: Person[] = [];
 
-  async firstUpdated() {
-    const people = (await getPeople()).people.map((person) => ({
+  protected override async firstUpdated() {
+    const { people } = await getPeople();
+    this.items = people.map((person) => ({
       ...person,
       displayName: `${person.firstName} ${person.lastName}`,
     }));
-    this.items = people;
   }
 
-  render() {
+  protected override render() {
     return html`
       <vaadin-grid
         theme="row-stripes"
         .items="${this.items}"
         .detailsOpenedItems="${this.detailsOpenedItem}"
-        @active-item-changed="${(e: GridActiveItemChangedEvent<Person>) =>
-          (this.detailsOpenedItem = [e.detail.value])}"
+        @active-item-changed="${(event: GridActiveItemChangedEvent<Person>) => {
+          const person = event.detail.value;
+          this.detailsOpenedItem = person ? [person] : [];
+        }}"
         ${gridRowDetailsRenderer<Person>(
           (person) => html`
             <vaadin-form-layout .responsiveSteps="${[{ minWidth: '0', columns: 3 }]}">

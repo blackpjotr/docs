@@ -1,5 +1,7 @@
 ---
-title: Advanced Guides
-description: A collection of advanced guides related to styling.
-order: 1000
+title: Advanced Styling Topics
+page-title: Advanced topics on styling Vaadin applications
+description: Advanced topics on styling applications.
+meta-description: Read advanced topics on styling Vaadin applications, such creating your own style properties, using npm packages, and implementing run-time theme switching.
+order: 50
 ---

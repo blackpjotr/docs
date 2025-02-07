@@ -1,0 +1,12 @@
+{
+  "asciidocAttributes": {
+    "flow": true,
+    "lit": true,
+    "react": true
+  },
+  "exampleGroupOrder": [
+    "Flow",
+    "React",
+    "Lit"
+  ]
+}

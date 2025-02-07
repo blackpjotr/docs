@@ -2,7 +2,7 @@
 
 Official documentation and code examples for Vaadin.
 
-This repository does not generate the vaadin.com/docs website. It only contains the content for it. The build is done using [Vaadin Design System Publisher](https://vaadin.com/design-system-publisher).
+This repository does not generate the [vaadin.com/docs](https://vaadin.com/docs) website. It only contains the content for them. The builds are done using [Vaadin Design System Publisher](https://vaadin.com/design-system-publisher).
 
 ## Contents
 
@@ -10,14 +10,14 @@ Files not explicitly listed below are from the standard Vaadin project setup.
 
 ### `articles`
 
-A hierarchy of AsciiDoc (either `.asciidoc` or `.adoc`) files, documenting the use of all Vaadin features. The file path defines the resulting URL on the documentation site.
+A hierarchy of AsciiDoc files (`.adoc`), documenting the use of all Vaadin features. The file path defines the resulting URL on the documentation site.
 
 For example:
 
-- `articles/intro/index.asciidoc` → `/intro/`
-- `articles/forms/data-binding.asciidoc` → `/forms/data-binding/`
+- `articles/flow/index.adoc` → `/flow/`
+- `articles/flow/forms/data-binding.adoc` → `/flow/forms/data-binding/`
 
-See the [contribution guides](https://vaadin.com/docs/latest/contributing-docs/overview) to learn how to write documentation articles.
+See the [contribution guides](https://vaadin.com/docs/contributing/docs) to learn more.
 
 ### `frontend`
 
@@ -29,7 +29,7 @@ Flow/Java examples, which are included as rendered examples in the documentation
 
 ### `scripts`
 
-Project related scripts (tests, validation builds, preview deployment, etc).
+Project-related scripts (tests, validation builds, preview deployment, etc).
 
 ### `.github`
 

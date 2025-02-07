@@ -1,5 +1,0 @@
----
-title: Configuration
-description: Instructions on how to configure your application and development environment.
-order: 200
----

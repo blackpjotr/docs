@@ -1,20 +1,20 @@
 import 'Frontend/demo/init'; // hidden-source-line
-import { html, LitElement } from 'lit';
 import '@vaadin/button';
 import '@vaadin/icon';
 import '@vaadin/notification';
 import '@vaadin/vaadin-lumo-styles/vaadin-iconset';
+import { html, LitElement } from 'lit';
 import { applyTheme } from 'Frontend/generated/theme';
 
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
     return root;
   }
 
-  render() {
+  protected override render() {
     return html`
       <vaadin-notification-card slot="middle">
         <div>

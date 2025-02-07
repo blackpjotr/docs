@@ -1,16 +1,15 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
+import '@vaadin/combo-box';
+import '@vaadin/horizontal-layout';
+import getDaysInMonth from 'date-fns/getDaysInMonth';
 import { html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import '@vaadin/combo-box';
 import type { ComboBoxSelectedItemChangedEvent } from '@vaadin/combo-box';
-import '@vaadin/horizontal-layout';
 import { applyTheme } from 'Frontend/generated/theme';
-import getDaysInMonth from 'date-fns/getDaysInMonth';
 
 @customElement('date-picker-individual-input-fields')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -36,13 +35,13 @@ export class Example extends LitElement {
 
   // tag::snippet[]
   @state()
-  selectedYear?: number;
+  selectedYear: number | undefined;
 
   @state()
-  selectedMonth?: string;
+  selectedMonth: string | undefined;
 
   @state()
-  selectedDay?: number;
+  selectedDay: number | undefined;
 
   @state()
   selectableDays: number[] = [];
@@ -73,7 +72,7 @@ export class Example extends LitElement {
     this.selectedDay = e.detail.value!;
   }
 
-  render() {
+  protected override render() {
     return html`
       <vaadin-horizontal-layout theme="spacing">
         <vaadin-combo-box

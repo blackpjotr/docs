@@ -1,14 +1,22 @@
 ---
 title: Swing Kit
-description: Swing Kit is a tool designed to render Vaadin views inside Swing applications. You can gradually modernize your existing Swing application using Vaadin, upgrading the application view-by-view.
+page-title: Render Vaadin views in Swing apps with Swing Kit
+description: Swing Kit is a tool designed to render Vaadin views inside Swing applications.
+meta-description: Learn how to render Vaadin views inside Swing applications using the Swing Kit tool.
 section-nav: commercial
+order: 100
 ---
+
 
 = Swing Kit
 
+Swing Kit is a tool designed to render Vaadin views inside Swing applications.
+
+You can gradually modernize your existing Swing applications using Vaadin, upgrading the application view-by-view.
+
 :commercial-feature: Swing Kit
 :kit-trial: true
-include::{articles}/_commercial-banner.asciidoc[opts=optional]
+include::{articles}/_commercial-banner.adoc[opts=optional]
 
 == Topics
 

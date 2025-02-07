@@ -1,8 +1,8 @@
 import 'Frontend/demo/init'; // hidden-source-line
-import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
 import '@vaadin/tabs';
 import '@vaadin/vertical-layout';
+import { html, LitElement } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import type { TabsSelectedChangedEvent } from '@vaadin/tabs';
 import { applyTheme } from 'Frontend/generated/theme';
 
@@ -14,14 +14,14 @@ export class Example extends LitElement {
   @state()
   private pages = ['Dashboard', 'Payment', 'Shipping'];
 
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
     return root;
   }
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <vaadin-tabs @selected-changed="${this.selectedChanged}">

@@ -1,19 +1,19 @@
 import 'Frontend/demo/init'; // hidden-source-line
-import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
 import '@vaadin/combo-box';
 import '@vaadin/crud';
-import '@vaadin/form-layout';
-import type { FormLayoutResponsiveStep } from '@vaadin/form-layout';
 import '@vaadin/email-field';
+import '@vaadin/form-layout';
 import '@vaadin/text-field';
+import { html, LitElement } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
+import type { FormLayoutResponsiveStep } from '@vaadin/form-layout';
 import { getPeople } from 'Frontend/demo/domain/DataService';
 import type Person from 'Frontend/generated/com/vaadin/demo/domain/Person';
 import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('crud-editor-content')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -27,18 +27,18 @@ export class Example extends LitElement {
   private professions: string[] = [];
 
   @state()
-  private responsiveSteps: FormLayoutResponsiveStep[] = [];
+  private responsiveSteps: FormLayoutResponsiveStep[] = [
+    { minWidth: 0, columns: 1 },
+    { minWidth: '30em', columns: 2 },
+  ];
 
-  async firstUpdated() {
-    this.items = (await getPeople()).people;
-    this.professions = [...new Set(this.items.map((i) => i.profession))];
-    this.responsiveSteps = [
-      { minWidth: 0, columns: 1 },
-      { minWidth: '30em', columns: 2 },
-    ];
+  protected override async firstUpdated() {
+    const { people } = await getPeople();
+    this.items = people;
+    this.professions = [...new Set(people.map((i) => i.profession))];
   }
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <vaadin-crud include="firstName, lastName, email, profession" .items=${this.items}>

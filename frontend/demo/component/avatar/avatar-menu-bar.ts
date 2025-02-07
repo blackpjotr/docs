@@ -1,17 +1,16 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
-import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
 import '@vaadin/avatar';
 import '@vaadin/menu-bar';
+import { html, LitElement } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import type { MenuBarItem } from '@vaadin/menu-bar';
-import { applyTheme } from 'Frontend/generated/theme';
 import { getPeople } from 'Frontend/demo/domain/DataService';
 import type Person from 'Frontend/generated/com/vaadin/demo/domain/Person';
+import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('avatar-menu-bar')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -22,9 +21,10 @@ export class Example extends LitElement {
   private menuBarItems: MenuBarItem[] = [];
 
   @state()
-  private person?: Person;
+  private person: Person | undefined;
 
-  async firstUpdated() {
+  // tag::snippet[]
+  protected override async firstUpdated() {
     const { people } = await getPeople({ count: 1 });
     this.person = people[0];
 
@@ -53,11 +53,10 @@ export class Example extends LitElement {
     ];
   }
 
-  render() {
+  protected override render() {
     return html`
-      <!-- tag::snippet[] -->
       <vaadin-menu-bar .items="${this.menuBarItems}" theme="tertiary-inline"></vaadin-menu-bar>
-      <!-- end::snippet[] -->
     `;
   }
+  // end::snippet[]
 }

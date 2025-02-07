@@ -1,8 +1,7 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
+import '@vaadin/combo-box';
 import { html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import '@vaadin/combo-box';
 import type { ComboBoxFilterChangedEvent } from '@vaadin/combo-box';
 import { getCountries } from 'Frontend/demo/domain/DataService';
 import type Country from 'Frontend/generated/com/vaadin/demo/domain/Country';
@@ -11,7 +10,7 @@ import { applyTheme } from 'Frontend/generated/theme';
 // tag::snippet[]
 @customElement('combo-box-filtering-2')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -24,11 +23,13 @@ export class Example extends LitElement {
   @state()
   private filteredItems: Country[] = [];
 
-  async firstUpdated() {
-    this.allItems = this.filteredItems = await getCountries();
+  protected override async firstUpdated() {
+    const countries = await getCountries();
+    this.allItems = countries;
+    this.filteredItems = countries;
   }
 
-  render() {
+  protected override render() {
     return html`
       <vaadin-combo-box
         label="Country"
@@ -40,11 +41,11 @@ export class Example extends LitElement {
     `;
   }
 
-  private filterChanged(e: ComboBoxFilterChangedEvent) {
-    const filter = e.detail.value;
-    this.filteredItems = this.allItems.filter((country) => {
-      return country.name.toLowerCase().startsWith(filter.toLowerCase());
-    });
+  private filterChanged(event: ComboBoxFilterChangedEvent) {
+    const filter = event.detail.value;
+    this.filteredItems = this.allItems.filter(({ name }) =>
+      name.toLowerCase().startsWith(filter.toLowerCase())
+    );
   }
 }
 // end::snippet[]

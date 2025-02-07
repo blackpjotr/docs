@@ -1,14 +1,14 @@
-import { html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
 import '@vaadin/horizontal-layout';
 import '@vaadin/icon';
 import '@vaadin/icons';
 import '@vaadin/text-field';
 import '@vaadin/vertical-layout';
+import { html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
 
 @customElement('fusion-application-icons-basic')
 export class IconsBasic extends LitElement {
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <vaadin-vertical-layout>

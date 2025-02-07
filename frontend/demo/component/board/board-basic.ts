@@ -1,26 +1,26 @@
 import 'Frontend/demo/init'; // hidden-source-line
-import { html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
 import '@vaadin/board';
-import { applyTheme } from 'Frontend/generated/theme';
 import './example-indicator';
 import './example-chart';
+import { html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
+import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('board-basic')
 export class Example extends LitElement {
-  constructor() {
-    super();
+  connectedCallback() {
+    super.connectedCallback();
     this.classList.add('basic-board');
   }
 
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
     return root;
   }
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <vaadin-board>

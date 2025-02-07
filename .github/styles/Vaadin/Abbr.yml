@@ -1,6 +1,5 @@
 extends: conditional
 message: "'%s' has no definition."
-link: https://vaadin.com/docs/latest/contributing-docs/style-guide/grammar/#abbreviations
 level: warning
 scope: text
 ignorecase: false
@@ -9,21 +8,31 @@ first: '\b([A-Z]{3,5})\b'
 second: '(?:\b[A-Z][a-z]+ )+\(([A-Z]{3,5})\)'
 # ... with the exception of these:
 exceptions:
+  - ACME
   - AJAX
+  - AKS
+  - ANSI
   - API
   - ARIA
-  - SAP
+  - BOM
   - ASCII
+  - AWT
   - CDI
   - CEO
   - CLI
   - CPU
   - CRUD
+  - CSP
   - CSS
   - CSV
+  - CVSS
+  - DAU
+  - DNS
   - DOM
   - DPI
   - DTO
+  - ESC
+  - EKS
   - EPSG
   - EPUB
   - FAQ
@@ -43,6 +52,8 @@ exceptions:
   - JAR
   - JDBC
   - JDK
+  - JNL
+  - JOOQ
   - JPA
   - JRE
   - JSF
@@ -51,18 +62,32 @@ exceptions:
   - JSX
   - JVM
   - JWT
+  - LLM
   - MDN
+  - MFA
   - MIME
   - MPR
+  - MTA
+  - MVC
+  - MVN
+  - NGINX
+  - OCR
+  - OSV
+  - OWASP
   - PATH
   - PDF
   - PHP
   - PNG
   - POJO
+  - POM
   - POST
   - RAM
   - RFC
+  - SAP
+  - SBOM
   - SDK
+  - SPA
+  - SPI
   - SQL
   - SSH
   - SSL
@@ -71,12 +96,17 @@ exceptions:
   - TCP
   - TEST
   - TLS
+  - TSX
+  - TXT
   - REST
+  - UIDL
   - URI
   - URL
   - USB
   - UTF
+  - UUID
   - WAR
+  - WCAG
   - XML
   - YAML
   - ZIP

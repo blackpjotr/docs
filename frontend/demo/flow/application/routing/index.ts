@@ -1,10 +1,10 @@
 // tag::snippet[]
-import { Router } from '@vaadin/router';
 import { Flow } from '@vaadin/flow-frontend';
+import { Router } from '@vaadin/router';
 
 // Get automatically generated routes to server-side views
 const { serverSideRoutes } = new Flow({
-  imports: () => import('../../../../../target/frontend/generated-flow-imports'),
+  imports: async () => import('../../../../../frontend/generated/flow/generated-flow-imports'),
 });
 
 export const router = new Router(document.querySelector('#outlet'));

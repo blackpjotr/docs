@@ -1,21 +1,20 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
+import '@vaadin/text-area';
 import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import '@vaadin/text-area';
-import { loremIpsum } from '../../../../src/main/resources/data/templates.json';
 import { applyTheme } from 'Frontend/generated/theme';
+import templates from '../../../../src/main/resources/data/templates.json';
 
 @customElement('text-area-height')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
     return root;
   }
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <style>
@@ -26,7 +25,7 @@ export class Example extends LitElement {
         }
       </style>
 
-      <vaadin-text-area label="Description" value="${loremIpsum}"></vaadin-text-area>
+      <vaadin-text-area label="Description" value="${templates.loremIpsum}"></vaadin-text-area>
       <!-- end::snippet[] -->
     `;
   }

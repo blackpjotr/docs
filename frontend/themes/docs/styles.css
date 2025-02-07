@@ -2,9 +2,17 @@
 
 @import './basic-layouts.css';
 @import './cookie-consent-theming.css';
+@import './dashboard.css';
 @import './login-rich-content.css';
 @import './notification-position-example.css';
 @import './board.css';
+@import './grid-cell-focus.css';
+@import './message-list-theming.css';
+@import './grid-styling.css';
+@import './grid-header-footer-styling.css';
+@import './multi-select-combo-box-chip-class-name.css';
+@import './nav-item-styling.css';
+@import './icon-fonts.css';
 
 html,
 :host {
@@ -17,3 +25,4 @@ html,
   --vaadin-user-color-5: #084391;
   --vaadin-user-color-6: #078836;
 }
+

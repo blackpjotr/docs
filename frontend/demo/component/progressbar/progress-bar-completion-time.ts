@@ -1,28 +1,31 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
+import '@vaadin/progress-bar';
 import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import '@vaadin/progress-bar';
 import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('progress-bar-completion-time')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
     return root;
   }
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
-      <div style="color: var(--lumo-secondary-text-color);">
-        <div>Generating report...</div>
-        <vaadin-progress-bar indeterminate></vaadin-progress-bar>
-        <div style="font-size: var(--lumo-font-size-xs)">
+      <div>
+        <label class="text-secondary" id="pblbl">Generating report...</label>
+        <vaadin-progress-bar
+          indeterminate
+          aria-labelledby="pblbl"
+          aria-describedby="sublbl"
+        ></vaadin-progress-bar>
+        <span class="text-secondary text-xs" id="sublbl">
           Process can take upwards of 10 minutes
-        </div>
+        </span>
       </div>
       <!-- end::snippet[] -->
     `;

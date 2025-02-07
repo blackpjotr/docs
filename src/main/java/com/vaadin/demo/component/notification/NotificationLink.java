@@ -16,7 +16,7 @@ import com.vaadin.demo.DemoExporter; // hidden-source-line
 public class NotificationLink extends Div {
 
     public NotificationLink() {
-        Button button = new Button("Try it");
+        Button button = new Button("Show notification");
         button.addClickListener(clickEvent -> {
             button.setEnabled(false);
 
@@ -26,6 +26,7 @@ public class NotificationLink extends Div {
         });
 
         add(button);
+        show();
     }
 
     public Notification show() {
@@ -40,7 +41,7 @@ public class NotificationLink extends Div {
 
         Button closeButton = new Button(new Icon("lumo", "cross"));
         closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
-        closeButton.getElement().setAttribute("aria-label", "Close");
+        closeButton.setAriaLabel("Close");
         closeButton.addClickListener(event -> {
             notification.close();
         });

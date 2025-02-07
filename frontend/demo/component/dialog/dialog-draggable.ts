@@ -1,20 +1,18 @@
 import 'Frontend/demo/init'; // hidden-source-line
-
-import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
-
 import '@vaadin/button';
 import '@vaadin/dialog';
 import '@vaadin/text-area';
 import '@vaadin/text-field';
 import '@vaadin/vertical-layout';
-import { dialogFooterRenderer, dialogHeaderRenderer, dialogRenderer } from '@vaadin/dialog/lit.js';
+import { html, LitElement } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import type { DialogOpenedChangedEvent } from '@vaadin/dialog';
+import { dialogFooterRenderer, dialogHeaderRenderer, dialogRenderer } from '@vaadin/dialog/lit.js';
 import { applyTheme } from 'Frontend/generated/theme';
 
 @customElement('dialog-draggable')
 export class Example extends LitElement {
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     const root = super.createRenderRoot();
     // Apply custom theme (only supported if your app uses one)
     applyTheme(root);
@@ -24,7 +22,7 @@ export class Example extends LitElement {
   @state()
   private dialogOpened = false;
 
-  render() {
+  protected override render() {
     return html`
       <!-- tag::snippet[] -->
       <vaadin-dialog
@@ -32,7 +30,9 @@ export class Example extends LitElement {
         draggable
         modeless
         .opened="${this.dialogOpened}"
-        @opened-changed="${(e: DialogOpenedChangedEvent) => (this.dialogOpened = e.detail.value)}"
+        @opened-changed="${(event: DialogOpenedChangedEvent) => {
+          this.dialogOpened = event.detail.value;
+        }}"
         ${dialogHeaderRenderer(
           () => html`
             <h2
@@ -59,17 +59,20 @@ export class Example extends LitElement {
           []
         )}
         ${dialogFooterRenderer(
-          () =>
-            html`
-              <vaadin-button @click="${this.close}">Cancel</vaadin-button>
-              <vaadin-button theme="primary" @click="${this.close}">Add note</vaadin-button>
-            `,
+          () => html`
+            <vaadin-button @click="${this.close}">Cancel</vaadin-button>
+            <vaadin-button theme="primary" @click="${this.close}">Add note</vaadin-button>
+          `,
           []
         )}
       ></vaadin-dialog>
       <!-- end::snippet[] -->
-      <vaadin-button @click="${() => (this.dialogOpened = true)}"> Show dialog </vaadin-button>
+      <vaadin-button @click="${this.open}">Show dialog</vaadin-button>
     `;
+  }
+
+  private open() {
+    this.dialogOpened = true;
   }
 
   private close() {

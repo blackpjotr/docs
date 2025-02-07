@@ -18,19 +18,17 @@ public class DateRangePicker extends CustomField<LocalDateRange> {
     public DateRangePicker() {
         start = new DatePicker();
         start.setPlaceholder("Start date");
+        // Sets title for screen readers
+        start.setAriaLabel("Start date");
 
         end = new DatePicker();
         end.setPlaceholder("End date");
+        end.setAriaLabel("End date");
 
-        // aria-label for screen readers
-        start.getElement()
-                .executeJs("const start = this.inputElement;"
-                        + "start.setAttribute('aria-label', 'Start date');"
-                        + "start.removeAttribute('aria-labelledby');");
-        end.getElement()
-                .executeJs("const end = this.inputElement;"
-                        + "end.setAttribute('aria-label', 'End date');"
-                        + "end.removeAttribute('aria-labelledby');");
+        // Enable manual validation on both date pickers to
+        // be able to override their invalid state
+        start.setManualValidation(true);
+        end.setManualValidation(true);
 
         add(start, new Text(" – "), end);
     }
@@ -44,6 +42,15 @@ public class DateRangePicker extends CustomField<LocalDateRange> {
     protected void setPresentationValue(LocalDateRange dateRange) {
         start.setValue(dateRange.getStartDate());
         end.setValue(dateRange.getEndDate());
+    }
+
+    @Override
+    public void setInvalid(boolean invalid) {
+        super.setInvalid(invalid);
+        // Propagate invalid state to both date pickers so
+        // that they show a red background
+        start.setInvalid(invalid);
+        end.setInvalid(invalid);
     }
 }
 // end::snippet[]
